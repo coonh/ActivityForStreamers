@@ -51,8 +51,5 @@ public class InputListener {
 
     }
 
-    private void selection(JSONObject input ){
-
-    }
 
 }

@@ -1,12 +1,11 @@
 package server;
 
-import com.sun.xml.internal.fastinfoset.util.PrefixArray;
-import jdk.nashorn.internal.runtime.JSONFunctions;
 import org.json.*;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class ServerMain {
 
@@ -21,6 +20,7 @@ public class ServerMain {
     public ServerMain(){
         try {
             serverSocket = new ServerSocket(port);
+            startScanner();
         } catch (IOException e) {
             System.out.println("Error creating Server socket");
             System.out.println("Server shutdown");
@@ -29,6 +29,26 @@ public class ServerMain {
 
 
 
+    }
+
+
+    private void startScanner(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String input;
+                Scanner scanner = new Scanner(System.in);
+                while(true){
+                    input = scanner.next();
+                    switch (input){
+                        case "quit":
+                            System.exit(0);
+                        default:
+                            System.out.println("Unknown command: " + input);
+                    }
+                }
+            }
+        }).start();
     }
 
     private void waitingForNewClients(){
