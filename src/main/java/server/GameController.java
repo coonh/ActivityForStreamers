@@ -30,6 +30,10 @@ public class GameController {
 
     protected void addPlayer(Socket socket){
         players.add(socket);
+
+        for (String color: stones.keySet()) {
+            moveStone(1,color);
+        }
     }
 
 
