@@ -16,6 +16,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
+        Gameboard game = new Gameboard();
+        game.show(primaryStage);
     }
 }
