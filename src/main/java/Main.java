@@ -3,6 +3,13 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
     public static void main(String[] args) {
+
+        if (args.length > 0 && args[0].toLowerCase().equals("server")){
+            System.out.println("Starte server");
+            // new Server
+            return;
+
+        }
         System.out.println("Hello World");
         launch(args);
     }
