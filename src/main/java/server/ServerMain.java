@@ -21,6 +21,7 @@ public class ServerMain {
         try {
             serverSocket = new ServerSocket(port);
             startScanner();
+            waitingForNewClients();
         } catch (IOException e) {
             System.out.println("Error creating Server socket");
             System.out.println("Server shutdown");
@@ -59,7 +60,7 @@ public class ServerMain {
                 client = serverSocket.accept();
                 if (doHandshake(client)){
                     gameController.addPlayer(client);
-
+                    newInputThread(gameController,client);
                 }
 
             } catch (IOException e) {
