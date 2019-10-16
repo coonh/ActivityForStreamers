@@ -80,4 +80,9 @@ public class ServerConnector {
     private void doHandshake(){
         // Hier kommt der Handshake rein
     }
+
+
+    public boolean connectToServer(String IpAddress, String portNumber){
+        //me = new Socket
+    }
 }
