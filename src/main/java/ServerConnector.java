@@ -92,8 +92,5 @@ public class ServerConnector {
 
         return doHandshake();
 
-
-
-        return true;
     }
 }
