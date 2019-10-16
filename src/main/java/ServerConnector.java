@@ -79,6 +79,7 @@ public class ServerConnector {
 
     private boolean doHandshake(){
         // Hier kommt der Handshake rein
+        return true;
     }
 
 
