@@ -77,12 +77,23 @@ public class ServerConnector {
 
     }
 
-    private void doHandshake(){
+    private boolean doHandshake(){
         // Hier kommt der Handshake rein
     }
 
 
-    public boolean connectToServer(String IpAddress, String portNumber){
-        //me = new Socket
+    public boolean connectToServer(String IpAddress, int portNumber){
+        try {
+            me = new Socket(IpAddress,portNumber);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return doHandshake();
+
+
+
+        return true;
     }
 }
