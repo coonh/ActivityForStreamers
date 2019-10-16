@@ -12,9 +12,12 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+
 public class Gameboard {
     Scene scene;
     double mainSceneX, mainSceneY;
+    ArrayList<Rectangle> rects;
 
     public Gameboard(){
 
@@ -36,6 +39,7 @@ public class Gameboard {
         ImagePattern field_patt_3 = new ImagePattern(field_graf_3);
         ImagePattern field_patt_4 = new ImagePattern(field_graf_4);
 
+        rects= new ArrayList<Rectangle>();
 
         for(int i=0;i<10;i++){
 
@@ -54,6 +58,7 @@ public class Gameboard {
                 r.setHeight(window_width/10);
                 r.setFill(field_patt_4);
             }
+            rects.add(r);
             backframe.add(r,i,0);
         }
        stack.getChildren().add(backframe);
@@ -82,12 +87,25 @@ public class Gameboard {
 
             mainSceneX = t.getSceneX();
             mainSceneY = t.getSceneY();
-
+        });
+        player1.setOnMouseReleased((t) -> {
+            checkBounds(player1);
         });
 
         stack.getChildren().add(player1);
         scene = new Scene(stack);
     }
+
+    private void checkBounds(Rectangle player1) {
+        for (Rectangle stone : rects) {
+                if (player1.getBoundsInParent().intersects(stone.getBoundsInParent())) {
+                    player1.setX(stone.getX());
+                    player1.setY(stone.getY());
+                }
+            }
+        }
+
+
     public void show(Stage stage){
         stage.setScene(scene);
         stage.show();
