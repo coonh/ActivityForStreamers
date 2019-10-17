@@ -19,6 +19,7 @@ public class Main extends Application {
             return;
 
         }
+        //System.out.println(Main.class.getResource("img/field_1.png").toString());
         System.out.println("Hello World");
         launch(args);
     }

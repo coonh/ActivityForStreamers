@@ -10,7 +10,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 
-import java.io.File;
 import java.util.ArrayList;
 
 
@@ -31,14 +30,25 @@ public class Gameboard {
         Pane backframe= new Pane();
         backframe.setMinWidth(window_width);
         backframe.setMinHeight(window_height);
-        Image field_graf_1 = new Image("file:img"+ File.separator+"field_1_v2.png");
+
+
+        /*Image field_graf_1 = new Image("file:img"+ File.separator+"field_1_v2.png");
         Image field_graf_2 = new Image("file:img"+ File.separator+"field_2_v2.png");
         Image field_graf_3 = new Image("file:img"+ File.separator+"field_5_v2.png");
         Image field_graf_4 = new Image("file:img"+ File.separator+"field_4_v2.png");
         Image img_player_1 = new Image("file:img"+ File.separator+"player_1.png");
         Image img_player_2 = new Image("file:img"+ File.separator+"player_2.png");
         Image img_start = new Image("file:img"+ File.separator+"start.png");
-        Image img_goal = new Image("file:img"+ File.separator+"goal.png");
+        Image img_goal = new Image("file:img"+ File.separator+"goal.png");*/
+
+        Image field_graf_1 = new Image(this.getClass().getResourceAsStream("/img/field_1_v2.png"));
+        Image field_graf_2 = new Image(this.getClass().getResourceAsStream("/img/field_2_v2.png"));
+        Image field_graf_3 = new Image(this.getClass().getResourceAsStream("/img/field_5_v2.png"));
+        Image field_graf_4 = new Image(this.getClass().getResourceAsStream("/img/field_4_v2.png"));
+        Image img_player_1 = new Image(this.getClass().getResourceAsStream("/img/player_1.png"));
+        Image img_player_2 = new Image(this.getClass().getResourceAsStream("/img/player_2.png"));
+        Image img_start = new Image(this.getClass().getResourceAsStream("/img/start.png"));
+        Image img_goal = new Image(this.getClass().getResourceAsStream("/img/goal.png"));
 
         ImagePattern field_patt_1 = new ImagePattern(field_graf_1);
         ImagePattern field_patt_2 = new ImagePattern(field_graf_2);
