@@ -1,12 +1,16 @@
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 
@@ -53,7 +57,6 @@ public class Gameboard {
         int fields_in_a_collumn = 7;
         double field_size = window_height/fields_in_a_collumn;
         int fields_in_a_row = 12;
-        System.out.println(fields_in_a_row);
         Rectangle start_rec = new Rectangle(field_size,field_size);
         start_rec.setFill(start_patt);
         backframe.getChildren().add(start_rec);
@@ -196,10 +199,10 @@ public class Gameboard {
         for(int i=0;i<6;i++){
             Rectangle cam = new Rectangle(3*field_size-10,2*field_size-10);
             cam.setStroke(Color.rgb(36, 123, 160));
-            cam.setArcHeight(10);
-            cam.setArcWidth(10);
+            //cam.setArcHeight(10);
+            //cam.setArcWidth(10);
             cam.setStrokeWidth(10);
-            cam.setFill(Color.rgb(0,255,0));
+            //cam.setFill(Color.rgb(0,255,0));
             cams.add(cam);
         }
         cams.get(0).setX(2*field_size+5);
@@ -213,13 +216,34 @@ public class Gameboard {
         cams.get(3).setX(2*field_size+5);
         cams.get(3).setY(4*field_size+5);
         backframe.getChildren().add(cams.get(3));
+        cams.get(3).setStroke(Color.rgb(242,95,92));
         for(int i=4;i<6;i++){
+            cams.get(i).setStroke(Color.rgb(242,95,92));
             cams.get(i).setX(cams.get(i-1).getX()+3*field_size);
             cams.get(i).setY(4*field_size+5);
             backframe.getChildren().add(cams.get(i));
         }
 
-        backframe.setBackground(new Background(new BackgroundFill(Color.rgb(16, 35, 68),CornerRadii.EMPTY, Insets.EMPTY)));
+        String [] streamer = {"coonh","xxthemagics","candynyaa","schniekelaramel","i407250234i","koksyy"};
+
+        for (Rectangle cam : cams){
+            Text name_tag = new Text("twitch.tv/"+streamer[cams.indexOf(cam)]);
+            HBox name_1 = new HBox();
+            name_1.setMinWidth(cam.getWidth()/2);
+            name_1.getChildren().add(name_tag);
+            name_tag.setFill(Color.rgb(80,81,79));
+            name_tag.setFont(new Font("Nova Round",20));
+            name_1.setBackground(new Background(new BackgroundFill(Color.rgb(255,255,255),CornerRadii.EMPTY, Insets.EMPTY)));
+            name_1.setLayoutX(cam.getBoundsInParent().getMinX()+cam.getStrokeWidth());
+            name_1.setLayoutY(cam.getBoundsInParent().getMaxY()-cam.getStrokeWidth()-(name_1.getBoundsInParent().getHeight()));
+            backframe.getChildren().add(name_1);
+        }
+
+
+
+
+
+        backframe.setBackground(new Background(new BackgroundFill(Color.rgb(36, 97, 133),CornerRadii.EMPTY, Insets.EMPTY)));
         player1.setX(start_rec.getX()+start_rec.getWidth()/2-player1.getWidth());
         player1.setY(start_rec.getY()+start_rec.getHeight()/2-player1.getHeight()/2);
         player2.setX((start_rec.getX()+start_rec.getWidth()/2-player1.getWidth())+player1.getWidth());
