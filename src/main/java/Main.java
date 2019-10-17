@@ -3,6 +3,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import server.ServerMain;
 
+
+
 public class Main extends Application {
 
     private Stage main_stage;

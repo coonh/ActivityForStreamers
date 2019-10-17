@@ -1,18 +1,19 @@
-import javafx.event.EventHandler;
+
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+
 import java.io.File;
 import java.util.ArrayList;
+
+
 
 public class Gameboard {
     Scene scene;
@@ -76,6 +77,7 @@ public class Gameboard {
                 }else if(i>25 && i<29) {
                     r.setFill(field_patt_3);
                     r.setX(0);
+                    r.setRotate(180);
                     r.setY(rects.get(rects.size()-1).getY()+field_size);
                 }else if(i>28 && i<40) {
                     r.setFill(field_patt_1);
@@ -97,6 +99,7 @@ public class Gameboard {
                 }else if(i>25 && i<29) {
                     r.setFill(field_patt_4);
                     r.setX(0);
+                    r.setRotate(180);
                     r.setY(rects.get(rects.size()-1).getY()+field_size);
                 }else if(i>28 && i<40) {
                     r.setFill(field_patt_2);
@@ -196,6 +199,7 @@ public class Gameboard {
             cam.setArcHeight(10);
             cam.setArcWidth(10);
             cam.setStrokeWidth(10);
+            cam.setFill(Color.rgb(0,255,0));
             cams.add(cam);
         }
         cams.get(0).setX(2*field_size+5);
@@ -214,9 +218,6 @@ public class Gameboard {
             cams.get(i).setY(4*field_size+5);
             backframe.getChildren().add(cams.get(i));
         }
-
-
-
 
         backframe.setBackground(new Background(new BackgroundFill(Color.rgb(16, 35, 68),CornerRadii.EMPTY, Insets.EMPTY)));
         player1.setX(start_rec.getX()+start_rec.getWidth()/2-player1.getWidth());

@@ -54,6 +54,7 @@ public class Mainmenu {
 
             Gameboard g = new Gameboard(stage,Double.parseDouble(w.getText()),Double.parseDouble(h.getText()));
             stage.setScene(g.scene);
+            stage.centerOnScreen();
             g.show(stage);
         });
 
