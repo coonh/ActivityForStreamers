@@ -180,7 +180,7 @@ class Gameboard {
             r.toFront();
         });
         player1.setOnMouseDragged((t) -> {
-            double offsetX = t.getSceneX() - mainSceneX;
+            /*double offsetX = t.getSceneX() - mainSceneX;
             double offsetY = t.getSceneY() - mainSceneY;
 
             Rectangle r = (Rectangle) (t.getSource());
@@ -189,7 +189,10 @@ class Gameboard {
             r.setY(r.getY() + offsetY);
 
             mainSceneX = t.getSceneX();
-            mainSceneY = t.getSceneY();
+            mainSceneY = t.getSceneY();*/
+
+            player1.yProperty().set(t.getY() - player2.getHeight()/2);
+            player1.xProperty().set(t.getX() - player2.getWidth()/2);
         });
         player1.setOnMouseReleased((t) -> {
             checkBounds(player1,true);
@@ -303,7 +306,7 @@ class Gameboard {
                         player1.setX((stone.getX()+stone.getWidth()/2-player1.getWidth()/2)+player1.getWidth()/2);
                     }*/
                     System.out.println("Collision found");
-                    player1.setY(stone.getY()+stone.getHeight()/2-player1.getHeight()/2);
+                    //player1.setY(stone.getY()+stone.getHeight()/2-player1.getHeight()/2);
 
 
                     String message =  new JSONStringer().object()

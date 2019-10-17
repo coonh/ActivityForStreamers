@@ -57,7 +57,7 @@ class ServerConnector {
                             case "moveStone":
 
                                 gameboard.placeStone(input.getString("color"), input.getInt("position"));
-                                //ToDo hier stein bewegen
+
                                 break;
                             case "drawCard":
 
