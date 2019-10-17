@@ -1,8 +1,13 @@
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import server.ServerMain;
 
 public class Main extends Application {
+
+    private Stage main_stage;
+
+
     public static void main(String[] args) {
 
         if (args.length > 0 && args[0].toLowerCase().equals("server")){
@@ -18,7 +23,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Mainmenu m = new Mainmenu();
+        main_stage = primaryStage;
+        Mainmenu m = new Mainmenu(primaryStage);
         m.show(primaryStage);
     }
+
 }
