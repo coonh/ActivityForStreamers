@@ -11,6 +11,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 
 
@@ -31,9 +32,16 @@ public class Gameboard {
         window_width=width;
         window_height=height;
         Pane stack = new Pane();
+        stack.setPrefHeight(height);
+        stack.setPrefWidth(width);
         Pane backframe= new Pane();
         backframe.setMinWidth(window_width);
         backframe.setMinHeight(window_height);
+
+        Scale scale = new Scale(1,1,0,0);
+        scale.xProperty().bind(stack.widthProperty().divide(width));
+        scale.yProperty().bind(stack.heightProperty().divide(height));
+        stack.getTransforms().add(scale);
 
 
         /*Image field_graf_1 = new Image("file:img"+ File.separator+"field_1_v2.png");
