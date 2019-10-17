@@ -13,16 +13,12 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-
         if (args.length > 0 && args[0].toLowerCase().equals("server")){
-            System.out.println("Starte server");
+            System.out.println("Starte Server");
             // new Server
             new ServerMain();
             return;
-
         }
-        //System.out.println(Main.class.getResource("img/field_1.png").toString());
-        System.out.println("Hello World");
         launch(args);
     }
 

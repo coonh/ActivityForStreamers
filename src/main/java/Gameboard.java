@@ -55,16 +55,6 @@ class Gameboard {
 
         stack.heightProperty().addListener((observable, oldValue, newValue) -> stage.setHeight(stage.getWidth()/16*9+35));
 
-
-        /*Image field_graf_1 = new Image("file:img"+ File.separator+"field_1_v2.png");
-        Image field_graf_2 = new Image("file:img"+ File.separator+"field_2_v2.png");
-        Image field_graf_3 = new Image("file:img"+ File.separator+"field_5_v2.png");
-        Image field_graf_4 = new Image("file:img"+ File.separator+"field_4_v2.png");
-        Image img_player_1 = new Image("file:img"+ File.separator+"player_1.png");
-        Image img_player_2 = new Image("file:img"+ File.separator+"player_2.png");
-        Image img_start = new Image("file:img"+ File.separator+"start.png");
-        Image img_goal = new Image("file:img"+ File.separator+"goal.png");*/
-
         Image field_graf_1 = new Image(this.getClass().getResourceAsStream("/img/field_1_v2.png"));
         Image field_graf_2 = new Image(this.getClass().getResourceAsStream("/img/field_2_v2.png"));
         Image field_graf_3 = new Image(this.getClass().getResourceAsStream("/img/field_5_v2.png"));
@@ -180,16 +170,6 @@ class Gameboard {
             r.toFront();
         });
         player1.setOnMouseDragged((t) -> {
-            /*double offsetX = t.getSceneX() - mainSceneX;
-            double offsetY = t.getSceneY() - mainSceneY;
-
-            Rectangle r = (Rectangle) (t.getSource());
-
-            r.setX(r.getX() + offsetX);
-            r.setY(r.getY() + offsetY);
-
-            mainSceneX = t.getSceneX();
-            mainSceneY = t.getSceneY();*/
 
             player1.yProperty().set(t.getY() - player2.getHeight()/2);
             player1.xProperty().set(t.getX() - player2.getWidth()/2);
@@ -199,7 +179,7 @@ class Gameboard {
         });
 
         /*
-         * Handle evrything u can do with player2
+         * Handle everything u can do with player2
          * */
         player2.setOnMousePressed((t) -> {
             mainSceneX = t.getSceneX();
@@ -211,16 +191,7 @@ class Gameboard {
 
         });
         player2.setOnMouseDragged((t) -> {
-            /*double offsetX = t.getSceneX() - mainSceneX;
-            double offsetY = t.getSceneY() - mainSceneY;
 
-            Rectangle r = (Rectangle) (t.getSource());
-
-            r.setX(r.getX() + offsetX);
-            r.setY(r.getY() + offsetY);
-
-            mainSceneX = t.getSceneX();
-            mainSceneY = t.getSceneY();*/
             player2.yProperty().set(t.getY() - player2.getHeight()/2);
             player2.xProperty().set(t.getX() - player2.getWidth()/2);
 
@@ -237,8 +208,6 @@ class Gameboard {
         for(int i=0;i<6;i++){
             Rectangle cam = new Rectangle(3*field_size-10,2*field_size-10);
             cam.setStroke(Color.rgb(36, 123, 160));
-            //cam.setArcHeight(10);
-            //cam.setArcWidth(10);
             cam.setStrokeWidth(10);
             //cam.setFill(Color.rgb(0,255,0));
             cams.add(cam);
@@ -261,7 +230,9 @@ class Gameboard {
             cams.get(i).setY(4*field_size+5);
             backframe.getChildren().add(cams.get(i));
         }
-
+        /*
+        * Adding Nametags to every Streamers Cam
+        * */
         String [] streamer = {"coonh","xxthemagics","candynyaa","schniekelaramel","i407250234i","koksyy"};
 
         for (Rectangle cam : cams){
@@ -276,9 +247,6 @@ class Gameboard {
             name_1.setLayoutY(cam.getBoundsInParent().getMaxY()-cam.getStrokeWidth()-(name_1.getBoundsInParent().getHeight()));
             backframe.getChildren().add(name_1);
         }
-
-
-
 
 
         backframe.setBackground(new Background(new BackgroundFill(Color.rgb(36, 97, 133),CornerRadii.EMPTY, Insets.EMPTY)));
@@ -300,14 +268,8 @@ class Gameboard {
 
         for (Rectangle stone : rects) {
                 if (player1.getBoundsInParent().intersects(stone.getBoundsInParent())) {
-                    /*if(red){
-                        player1.setX((stone.getX()+stone.getWidth()/2-player1.getWidth()/2)-player1.getWidth()/2);
-                    }else{
-                        player1.setX((stone.getX()+stone.getWidth()/2-player1.getWidth()/2)+player1.getWidth()/2);
-                    }*/
-                    System.out.println("Collision found");
-                    //player1.setY(stone.getY()+stone.getHeight()/2-player1.getHeight()/2);
 
+                    System.out.println("Collision found");
 
                     String message =  new JSONStringer().object()
                             .key("event").value("moveStone")
@@ -353,5 +315,4 @@ class Gameboard {
         stage.setScene(scene);
         stage.show();
     }
-
 }

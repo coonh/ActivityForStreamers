@@ -21,15 +21,15 @@ public class GameController {
         this.players = new ArrayList<>();
         stones = new HashMap<>();
 
-        stones.put("red", 1);
-        stones.put("blue", 1);
+        stones.put("red", 0);
+        stones.put("blue", 0);
     }
 
     protected void addPlayer(Socket socket){
         players.add(socket);
 
         for (String color: stones.keySet()) {
-            moveStone(1,color);
+            moveStone(0,color);
         }
     }
 
