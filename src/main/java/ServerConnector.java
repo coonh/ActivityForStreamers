@@ -1,18 +1,23 @@
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.Buffer;
 
-public class ServerConnector {
+class ServerConnector {
 
-    Socket me;
+    private Socket me;
 
     private static ServerConnector instance;
+    private PrintWriter writer;
+    private BufferedReader reader;
+
+    private Gameboard gameboard;
+
+
 
 
 
@@ -20,7 +25,7 @@ public class ServerConnector {
     }
 
 
-    public static ServerConnector getInstance(){
+    static ServerConnector getInstance(){
         if (ServerConnector.instance == null){
             ServerConnector.instance = new ServerConnector();
         }
@@ -28,70 +33,113 @@ public class ServerConnector {
     }
 
 
-    public void sendMessage(String message){
-
+    void sendMessage(String message){
+            writer.println(message);
+            writer.flush();
     }
 
-    private void startRecieving(){
-        new Thread(new Runnable() {
+    void startRecieving(){
+        new Thread(() -> {
+
+            System.out.println("Start recieving");
+
+            String message;
+            try {
 
 
+                while (me.isConnected()) {
+                    if ((message = reader.readLine()) != null) {
+                        JSONObject input = new JSONObject(message);
 
-            @Override
-            public void run() {
+                        System.out.println("Recieved message: " + input.toString());
 
-                String message;
-                BufferedReader reader;
-                try {
-                    reader = new BufferedReader(new InputStreamReader(me.getInputStream()));
+                        switch (input.getString("event")) {
+                            case "moveStone":
 
+                                gameboard.placeStone(input.getString("color"), input.getInt("position"));
+                                //ToDo hier stein bewegen
+                                break;
+                            case "drawCard":
 
-                    while (me.isConnected()) {
-                        if ((message = reader.readLine()) != null) {
-                            JSONObject input = new JSONObject(message);
-
-                            switch (input.getString("event")) {
-                                case "moveStone":
-
-                                    //ToDo hier stein bewegen
-                                    break;
-                                case "drawCard":
-
-                                    //ToDo hier kommt die Karte an
-                                    break;
-                                default:
-                                    System.out.println("Unknown type " + input.getString("event"));
-                            }
+                                //ToDo hier kommt die Karte an
+                                break;
+                            default:
+                                System.out.println("Unknown type " + input.getString("event"));
                         }
-
-
                     }
-                } catch (IOException e) {
-                    return;
-                } catch (JSONException ex) {
+
 
                 }
-            }
+            } catch (IOException e) {
+                System.err.println("Error listening");
 
+            } catch (JSONException ex) {
+                System.err.println("Error listening json");
+            }
         }).start();
 
     }
 
     private boolean doHandshake(){
         // Hier kommt der Handshake rein
+
+
+        String answer = "ERROR";
+
+        try {
+
+            String message = new JSONStringer().object().key("version").value(1).endObject().toString();
+            System.out.println("Sending message: " + message);
+
+            sendMessage(message);
+
+
+
+
+            System.out.println("Waiting for answer of server");
+            if ((answer = reader.readLine())!= null){
+
+                System.out.println("Recieving server answer: " + answer);
+
+                if ( new JSONObject(answer).getString("status").equals("OK")){
+                    sendMessage(new JSONObject(answer).toString());
+
+                }
+            }
+
+
+
+        } catch (IOException e) {
+            System.err.println("IO EXCEPTION");
+            e.printStackTrace();
+            return false;
+        } catch (JSONException jsonException){
+            System.err.println("Error connecting to Server");
+            System.err.println(answer);
+            return  false;
+        }
+
+
         return true;
     }
 
 
-    public boolean connectToServer(String IpAddress, int portNumber){
+    boolean connectToServer(String IpAddress, int portNumber){
         try {
             me = new Socket(IpAddress,portNumber);
+            reader = new BufferedReader(new InputStreamReader(me.getInputStream()));
+            writer = new PrintWriter(me.getOutputStream());
+
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Host with " + IpAddress + " is not online or doesn't even exist");
             return false;
         }
 
         return doHandshake();
 
+    }
+
+    void setGameboard(Gameboard gameboard) {
+        this.gameboard = gameboard;
     }
 }

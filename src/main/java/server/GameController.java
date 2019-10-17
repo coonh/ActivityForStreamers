@@ -4,10 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.beans.Expression;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,11 +36,11 @@ public class GameController {
 
     private void sendMessage(String message, Socket reciever){
         try{
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(reciever.getOutputStream()));
+            PrintWriter writer = new PrintWriter(reciever.getOutputStream());
             JSONObject toSend = new JSONObject(message);
-            writer.append(toSend.toString());
+            writer.println(toSend.toString());
             writer.flush();
-            writer.close();
+            System.out.println("Sended message: " + toSend.toString() + " TO " + reciever.getInetAddress().toString());
 
         } catch (JSONException e){
 
@@ -77,11 +74,13 @@ public class GameController {
 
     private void moveStone(int newPosition, String color){
 
-        stones.replace(color,newPosition);
+
+        if (newPosition != -2) stones.replace(color,newPosition);
 
         JSONObject answer = new JSONObject();
         answer.put("event", "moveStone");
         answer.put("position", stones.get(color));
+        answer.put("color", color);
 
         players.forEach(player -> sendMessage(answer.toString(),player));
 

@@ -1,3 +1,5 @@
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -21,8 +23,17 @@ public class Mainmenu {
         Label l3 = new Label("Streamresolution: ");
         Label x = new Label("x");
 
-        TextField ip_adress = new TextField("Enter Server-IP");
+        TextField ip_adress = new TextField("127.0.0.1");
         TextField port = new TextField("11000");
+
+        port.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*")) port.setText((newValue.replaceAll("[^\\d]", "")));
+            }
+        });
+
+
         TextField w = new TextField("1280");
         TextField h = new TextField("720");
 
@@ -49,12 +60,20 @@ public class Mainmenu {
 
         send.setOnAction(event -> {
             //TODO connecToServer()
-            String prt = port.getText();
+
+
+            int prt = Integer.parseInt(port.getText());
             String ip = ip_adress.getText();
 
+            if (!ServerConnector.getInstance().connectToServer(ip,prt)) return;
+
             Gameboard g = new Gameboard(stage,Double.parseDouble(w.getText()),Double.parseDouble(h.getText()));
+
+            ServerConnector.getInstance().setGameboard(g);
+
             stage.setScene(g.scene);
             stage.centerOnScreen();
+            ServerConnector.getInstance().startRecieving();
             g.show(stage);
         });
 

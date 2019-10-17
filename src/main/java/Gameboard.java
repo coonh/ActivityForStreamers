@@ -18,21 +18,25 @@ import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.TransformChangedEvent;
 import javafx.stage.Stage;
+import org.json.JSONStringer;
 
 
 import java.util.ArrayList;
 
 
 
-public class Gameboard {
+class Gameboard {
     Scene scene;
-    double mainSceneX, mainSceneY;
-    ArrayList<Rectangle> rects;
+    private double mainSceneX, mainSceneY;
+    private ArrayList<Rectangle> rects;
     Stage stage;
     double window_width;
     double window_height;
 
-    public Gameboard(Stage stage, double width, double height){
+    Rectangle player1;
+    Rectangle player2;
+
+    Gameboard(Stage stage, double width, double height){
         this.stage = stage;
         window_width=width;
         window_height=height;
@@ -49,12 +53,7 @@ public class Gameboard {
 
         stack.getTransforms().add(scale);
 
-        stack.heightProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                stage.setHeight(stage.getWidth()/16*9+35);
-            }
-        });
+        stack.heightProperty().addListener((observable, oldValue, newValue) -> stage.setHeight(stage.getWidth()/16*9+35));
 
 
         /*Image field_graf_1 = new Image("file:img"+ File.separator+"field_1_v2.png");
@@ -82,7 +81,7 @@ public class Gameboard {
         ImagePattern start_patt = new ImagePattern(img_start);
         ImagePattern goal_patt = new ImagePattern(img_goal);
 
-        rects= new ArrayList<Rectangle>();
+        rects= new ArrayList<>();
 
 
         int fields_in_a_collumn = 7;
@@ -161,10 +160,10 @@ public class Gameboard {
         ImagePattern ip_p_1 = new ImagePattern(img_player_1);
         ImagePattern ip_p_2 = new ImagePattern(img_player_2);
 
-        Rectangle player1 = new Rectangle((field_size/2)-field_size*0.1,(field_size)*0.6);
+        player1 = new Rectangle((field_size/2)-field_size*0.1,(field_size)*0.6);
         player1.setFill(ip_p_1);
 
-        Rectangle player2 = new Rectangle((field_size/2)-field_size*0.1,(field_size)*0.6);
+        player2 = new Rectangle((field_size/2)-field_size*0.1,(field_size)*0.6);
         player2.setFill(ip_p_2);
 
         player1.setCursor(Cursor.HAND);
@@ -290,25 +289,64 @@ public class Gameboard {
 
     private void checkBounds(Rectangle player1,boolean red) {
 
+        System.out.println("Collision check");
 
+        String color;
+        if (red) color = "red";
+        else color = "blue";
 
         for (Rectangle stone : rects) {
                 if (player1.getBoundsInParent().intersects(stone.getBoundsInParent())) {
-                    if(red){
+                    /*if(red){
                         player1.setX((stone.getX()+stone.getWidth()/2-player1.getWidth()/2)-player1.getWidth()/2);
                     }else{
                         player1.setX((stone.getX()+stone.getWidth()/2-player1.getWidth()/2)+player1.getWidth()/2);
-                    }
-
+                    }*/
+                    System.out.println("Collision found");
                     player1.setY(stone.getY()+stone.getHeight()/2-player1.getHeight()/2);
+
+
+                    String message =  new JSONStringer().object()
+                            .key("event").value("moveStone")
+                            .key("position").value(rects.indexOf(stone))
+                            .key("color").value(color).endObject().toString();
+
+                    System.out.println("Sending message: " +message);
+
+                    ServerConnector.getInstance().sendMessage(message);
                     return;
                 }
 
             }
+
+        String message =  new JSONStringer().object()
+                .key("event").value("moveStone")
+                .key("position").value(-2)
+                .key("color").value(color).endObject().toString();
+
+        System.out.println("Sending message: " +message);
+
+        ServerConnector.getInstance().sendMessage(message);
         }
 
+    void placeStone(String color, int position){
+        if (position == -2 ) return;
 
-    public void show(Stage stage){
+        Rectangle stone = rects.get(position);
+        switch (color){
+            case "red":
+                player1.setX((stone.getX()+stone.getWidth()/2-player1.getWidth()/2)-player1.getWidth()/2);
+                player1.setY(stone.getY()+stone.getHeight()/2-player1.getHeight()/2);
+                break;
+            default:
+                player2.setX((stone.getX()+stone.getWidth()/2-player2.getWidth()/2)+player2.getWidth()/2);
+                player2.setY(stone.getY()+stone.getHeight()/2-player2.getHeight()/2);
+
+        }
+    }
+
+
+    void show(Stage stage){
         stage.setScene(scene);
         stage.show();
     }

@@ -27,11 +27,16 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         main_stage = primaryStage;
         main_stage.getIcons().add(new Image(Main.class.getResourceAsStream("/img/LOGO.png")));
         Mainmenu m = new Mainmenu(primaryStage);
         m.show(primaryStage);
     }
 
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        System.exit(0);
+    }
 }
