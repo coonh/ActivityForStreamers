@@ -23,8 +23,8 @@ public class Mainmenu {
 
         TextField ip_adress = new TextField("Enter Server-IP");
         TextField port = new TextField("11000");
-        TextField w = new TextField("1680");
-        TextField h = new TextField("942");
+        TextField w = new TextField("1280");
+        TextField h = new TextField("720");
 
         HBox h1 = new HBox(5);
         HBox h2 = new HBox(5);

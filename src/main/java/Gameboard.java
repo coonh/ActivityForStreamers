@@ -1,4 +1,7 @@
 
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -9,9 +12,11 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
+import javafx.scene.transform.TransformChangedEvent;
 import javafx.stage.Stage;
 
 
@@ -33,15 +38,23 @@ public class Gameboard {
         window_height=height;
         Pane stack = new Pane();
         stack.setPrefHeight(height);
-        stack.setPrefWidth(width);
+        stack.setMinHeight(height);
         Pane backframe= new Pane();
         backframe.setMinWidth(window_width);
         backframe.setMinHeight(window_height);
 
-        Scale scale = new Scale(1,1,0,0);
+        Scale scale = new Scale(1,1);
         scale.xProperty().bind(stack.widthProperty().divide(width));
-        scale.yProperty().bind(stack.heightProperty().divide(height));
+        scale.yProperty().bind(stack.widthProperty().divide(width));
+
         stack.getTransforms().add(scale);
+
+        stack.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                stage.setHeight(stage.getWidth()/16*9+35);
+            }
+        });
 
 
         /*Image field_graf_1 = new Image("file:img"+ File.separator+"field_1_v2.png");
@@ -192,9 +205,11 @@ public class Gameboard {
 
             Rectangle r = (Rectangle) (t.getSource());
             r.toFront();
+
+
         });
         player2.setOnMouseDragged((t) -> {
-            double offsetX = t.getSceneX() - mainSceneX;
+            /*double offsetX = t.getSceneX() - mainSceneX;
             double offsetY = t.getSceneY() - mainSceneY;
 
             Rectangle r = (Rectangle) (t.getSource());
@@ -203,7 +218,10 @@ public class Gameboard {
             r.setY(r.getY() + offsetY);
 
             mainSceneX = t.getSceneX();
-            mainSceneY = t.getSceneY();
+            mainSceneY = t.getSceneY();*/
+            player2.yProperty().set(t.getY() - player2.getHeight()/2);
+            player2.xProperty().set(t.getX() - player2.getWidth()/2);
+
         });
         player2.setOnMouseReleased((t) -> {
             checkBounds(player2,false);
