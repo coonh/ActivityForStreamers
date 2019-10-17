@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ActivityServer:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ActivityServer_jar</output-path>
+    <root id="archive" name="ActivityForStreamers.main.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/metainf2/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="ActivityForStreamers.main" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.json/json/20190722/7bce7bacf0ab5e9f894d307a3de8b7f540064d5/json-20190722.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

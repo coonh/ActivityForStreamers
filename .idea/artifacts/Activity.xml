@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="ActivityForStreamers:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/ActivityForStreamers_jar</output-path>
+  <artifact type="jar" name="Activity">
+    <output-path>$PROJECT_DIR$/out/artifacts/Activity</output-path>
     <root id="archive" name="ActivityForStreamers.jar">
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" />

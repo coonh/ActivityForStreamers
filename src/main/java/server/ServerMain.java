@@ -17,6 +17,12 @@ public class ServerMain {
     private int version = 1;
     private GameController gameController;
 
+
+    public static void main(String[] args){
+        System.out.println("Server is starting");
+        new ServerMain();
+    }
+
     public ServerMain(){
         try {
             gameController = new GameController();
@@ -56,6 +62,7 @@ public class ServerMain {
         Socket client;
         while  (!serverSocket.isClosed()){
             try {
+                System.out.println("Server is started");
                 client = serverSocket.accept();
                 System.out.println("New Server socket: " + client.getInetAddress().toString());
                 newInputThread(gameController,client);
