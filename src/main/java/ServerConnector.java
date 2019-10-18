@@ -50,7 +50,6 @@ class ServerConnector {
                 while (me.isConnected()) {
                     if ((message = reader.readLine()) != null) {
                         JSONObject input = new JSONObject(message);
-
                         System.out.println("Recieved message: " + input.toString());
 
                         switch (input.getString("event")) {
@@ -59,9 +58,9 @@ class ServerConnector {
                                 gameboard.placeStone(input.getString("color"), input.getInt("position"));
 
                                 break;
-                            case "drawCard":
+                            case "recieveCard":
+                                gameboard.drawCard(input.getString("word"), input.getInt("value"));
 
-                                //ToDo hier kommt die Karte an
                                 break;
                             default:
                                 System.out.println("Unknown type " + input.getString("event"));

@@ -89,19 +89,24 @@ public class GameController {
     }
 
     private void drawCard(int type, Socket sender){
-
         String word;
+        int value;
         switch (type){
             case 3:
+                System.out.println("Bin in der 3");
+                value = 3;
                 word = "Apfelkuchen";
                 break;
             case 4:
+                value = 4;
                 word = "Käsekuchen";
                 break;
             case 5:
+                value = 5;
                 word = "Ananas";
                 break;
             default:
+                value = -1;
                 word = "ERROR";
         }
 
@@ -109,10 +114,9 @@ public class GameController {
 
         answer.put("event", "recieveCard");
         answer.put("word", word);
+        answer.put("value",value);
 
         sendMessage(answer.toString(),sender);
-
-
 
     }
 }

@@ -1,22 +1,19 @@
 
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
-import javafx.scene.transform.TransformChangedEvent;
 import javafx.stage.Stage;
 import org.json.JSONStringer;
 
@@ -27,25 +24,34 @@ import java.util.ArrayList;
 
 class Gameboard {
     Scene scene;
+    private Popup_card popup;
     private double mainSceneX, mainSceneY;
     private ArrayList<Rectangle> rects;
-    Stage stage;
+    private Stage stage;
     double window_width;
     double window_height;
+    double field_size;
 
-    Rectangle player1;
-    Rectangle player2;
+    private boolean drawMode;
+
+    private Pane stack;
+    private Rectangle player1;
+    private Rectangle player2;
+    private ImageView [] cards;
 
     Gameboard(Stage stage, double width, double height){
         this.stage = stage;
         window_width=width;
         window_height=height;
-        Pane stack = new Pane();
+        stack = new Pane();
         stack.setPrefHeight(height);
         stack.setMinHeight(height);
         Pane backframe= new Pane();
         backframe.setMinWidth(window_width);
         backframe.setMinHeight(window_height);
+
+        drawMode = false;
+
 
         Scale scale = new Scale(1,1);
         scale.xProperty().bind(stack.widthProperty().divide(width));
@@ -63,6 +69,9 @@ class Gameboard {
         Image img_player_2 = new Image(this.getClass().getResourceAsStream("/img/player_2.png"));
         Image img_start = new Image(this.getClass().getResourceAsStream("/img/start.png"));
         Image img_goal = new Image(this.getClass().getResourceAsStream("/img/goal.png"));
+        Image img_card_pack_3 = new Image(this.getClass().getResourceAsStream("/img/card_pack_3.png"));
+        Image img_card_pack_4 = new Image(this.getClass().getResourceAsStream("/img/card_pack_4.png"));
+        Image img_card_pack_5 = new Image(this.getClass().getResourceAsStream("/img/card_pack_5.png"));
 
         ImagePattern field_patt_1 = new ImagePattern(field_graf_1);
         ImagePattern field_patt_2 = new ImagePattern(field_graf_2);
@@ -70,12 +79,15 @@ class Gameboard {
         ImagePattern field_patt_4 = new ImagePattern(field_graf_4);
         ImagePattern start_patt = new ImagePattern(img_start);
         ImagePattern goal_patt = new ImagePattern(img_goal);
+        ImagePattern card_pack_3 = new ImagePattern(img_card_pack_3);
+        ImagePattern card_pack_4 = new ImagePattern(img_card_pack_4);
+        ImagePattern card_pack_5 = new ImagePattern(img_card_pack_5);
 
         rects= new ArrayList<>();
 
 
         int fields_in_a_collumn = 7;
-        double field_size = window_height/fields_in_a_collumn;
+        field_size = window_height/fields_in_a_collumn;
         int fields_in_a_row = 12;
         Rectangle start_rec = new Rectangle(field_size,field_size);
         start_rec.setFill(start_patt);
@@ -199,6 +211,38 @@ class Gameboard {
         player2.setOnMouseReleased((t) -> {
             checkBounds(player2,false);
         });
+        /*
+        * Adding the cards and make em click
+        */
+
+        ImageView card3 = new ImageView(img_card_pack_3);
+        ImageView card4 = new ImageView(img_card_pack_4);
+        ImageView card5 = new ImageView(img_card_pack_5);
+        cards = new ImageView[3];
+        cards[0] = card3;
+        cards[1] = card4;
+        cards[2] = card5;
+
+        for(int i=0;i<cards.length;i++){
+            cards[i].setPreserveRatio(true);
+            cards[i].setFitHeight(field_size-10);
+            cards[i].setY(2*field_size+5);
+            cards[i].setX(i*(5+cards[i].getBoundsInParent().getWidth()));
+            backframe.getChildren().add(cards[i]);
+            int value = i+3;
+            cards[i].setOnMouseClicked(event -> {
+                String message =  new JSONStringer().object()
+                        .key("event").value("drawCard")
+                        .key("type").value(value)
+                        .endObject().toString();
+
+                System.out.println("Sending message: " +message);
+
+                ServerConnector.getInstance().sendMessage(message);
+
+            });
+        }
+
 
         /*
         / Making Borders for Streamers Cams
@@ -255,6 +299,8 @@ class Gameboard {
         player1.setY(start_rec.getY()+start_rec.getHeight()/2-player1.getHeight()/2);
         player2.setX((start_rec.getX()+start_rec.getWidth()/2-player1.getWidth())+player1.getWidth());
         player2.setY(start_rec.getY()+start_rec.getHeight()/2-player2.getHeight()/2);
+
+
         stack.getChildren().addAll(player1,player2);
         scene = new Scene(stack);
     }
@@ -316,4 +362,28 @@ class Gameboard {
         stage.setScene(scene);
         stage.show();
     }
+
+    void drawCard(String word,int value) {
+        Platform.runLater(()-> {
+            if(!drawMode) {
+                popup = new Popup_card(word, field_size + 10,this,value);
+                popup.setTranslateX(rects.get(21).getBoundsInLocal().getMinX() - popup.getBoundsInParent().getWidth() / 2);
+                popup.setTranslateY(rects.get(21).getBoundsInLocal().getMinY() - 8);
+                stack.getChildren().add(popup);
+
+                for (ImageView card : cards) {
+                    card.setDisable(true);
+                }
+            }else{
+                stack.getChildren().remove(popup);
+                popup = new Popup_card(word, field_size + 10,this,value);
+                popup.setTranslateX(rects.get(21).getBoundsInLocal().getMinX() - popup.getBoundsInParent().getWidth() / 2);
+                popup.setTranslateY(rects.get(21).getBoundsInLocal().getMinY() - 8);
+                stack.getChildren().add(popup);
+            }
+        });
+
+    }
+
+
 }

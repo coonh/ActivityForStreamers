@@ -59,8 +59,6 @@ public class Mainmenu {
         v.setAlignment(Pos.CENTER);
 
         send.setOnAction(event -> {
-            //TODO connecToServer()
-
 
             int prt = Integer.parseInt(port.getText());
             String ip = ip_adress.getText();
