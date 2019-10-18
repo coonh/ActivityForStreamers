@@ -36,6 +36,7 @@ class Gameboard {
     private int counter;
     private int active_card_value;
 
+    private ImageView stopwatch;
     private Pane stack;
     private Rectangle player1;
     private Rectangle player2;
@@ -51,6 +52,8 @@ class Gameboard {
         Pane backframe= new Pane();
         backframe.setMinWidth(window_width);
         backframe.setMinHeight(window_height);
+
+
 
         active_card_value = 3;
         drawMode = false;
@@ -76,6 +79,9 @@ class Gameboard {
         Image img_card_pack_4 = new Image(this.getClass().getResourceAsStream("/img/card_pack_4.png"));
         Image img_card_pack_5 = new Image(this.getClass().getResourceAsStream("/img/card_pack_5.png"));
 
+        Image img_stopwatch_anim = new Image(this.getClass().getResourceAsStream("/img/stopwatch.gif"));
+        Image img_stopwatch = new Image(this.getClass().getResourceAsStream("/img/stopwatch.png"));
+
         ImagePattern field_patt_1 = new ImagePattern(field_graf_1);
         ImagePattern field_patt_2 = new ImagePattern(field_graf_2);
         ImagePattern field_patt_3 = new ImagePattern(field_graf_3);
@@ -87,7 +93,6 @@ class Gameboard {
         ImagePattern card_pack_5 = new ImagePattern(img_card_pack_5);
 
         rects= new ArrayList<>();
-
 
         int fields_in_a_collumn = 7;
         field_size = window_height/fields_in_a_collumn;
@@ -155,6 +160,8 @@ class Gameboard {
         }
        stack.getChildren().add(backframe);
 
+
+
         //Timer GUI
         VBox time_frame = new VBox();
         HBox t_top = new HBox();
@@ -183,6 +190,20 @@ class Gameboard {
         time_frame.setTranslateX(field_size+5);
         time_frame.setTranslateY(4*field_size+5);
         stack.getChildren().add(time_frame);
+
+        stopwatch = new ImageView(img_stopwatch);
+        stopwatch.setTranslateX(field_size);
+        stopwatch.setTranslateY(5*field_size);
+        stopwatch.setFitHeight(field_size);
+        stopwatch.setPreserveRatio(true);
+        stopwatch.setOnMouseClicked(event -> {
+            //TODO Server start stopwatch
+            if(stopwatch.getImage().equals(img_stopwatch)) stopwatch.setImage(img_stopwatch_anim);
+            else if(stopwatch.getImage().equals(img_stopwatch_anim)) stopwatch.setImage(img_stopwatch);
+
+        });
+
+        stack.getChildren().add(stopwatch);
 
 
         // Scoreboard
@@ -305,7 +326,7 @@ class Gameboard {
             Rectangle cam = new Rectangle(3*field_size-10,2*field_size-10);
             cam.setStroke(Color.rgb(36, 123, 160));
             cam.setStrokeWidth(10);
-            cam.setFill(Color.rgb(0,255,0));
+            //cam.setFill(Color.rgb(0,255,0));
             cams.add(cam);
         }
         cams.get(0).setX(2*field_size+5);
@@ -447,5 +468,13 @@ class Gameboard {
     public void increaseCounter() {
         counter = counter + active_card_value;
         counter_txt.setText(""+counter);
+    }
+
+    public void finishRound() {
+        stack.getChildren().remove(popup);
+        drawMode = false;
+        for (ImageView card : cards) {
+            card.setDisable(false);
+        }
     }
 }

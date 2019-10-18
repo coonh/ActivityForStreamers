@@ -64,14 +64,7 @@ public class Popup_card extends HBox {
         check.setCursor(Cursor.HAND);
 
         cross.setOnMouseClicked(event -> {
-            String message =  new JSONStringer().object()
-                    .key("event").value("drawCard")
-                    .key("type").value(value)
-                    .endObject().toString();
-
-            System.out.println("Sending message: " +message);
-
-            ServerConnector.getInstance().sendMessage(message);
+            parent.finishRound();
         });
 
         StackPane stack = new StackPane();
