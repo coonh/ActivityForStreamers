@@ -28,28 +28,72 @@ public class DrawingWindow extends Canvas {
     public void activateEventHandler(){
         this.setOnMousePressed(event -> {
             if (event.getButton().equals(MouseButton.SECONDARY)){
-                myGC.moveTo(event.getX(), event.getY());
+                /*myGC.moveTo(event.getX(), event.getY());
                 myGC.setStroke(Color.WHITE);
-                myGC.setLineWidth(100);
+                myGC.setLineWidth(100);*/
+                ServerConnector.getInstance().beginPathDrawingWindow(
+                        event.getX(),
+                        event.getY(),
+                        100,
+                        "white");
 
             }else {
-                myGC.setLineWidth(8);
+                /*myGC.setLineWidth(8);
                 myGC.moveTo(event.getX(), event.getY());
-                myGC.setStroke(Color.BLACK);
+                myGC.setStroke(Color.BLACK);*/
+
+                ServerConnector.getInstance().beginPathDrawingWindow(
+                        event.getX(),
+                        event.getY(),
+                        8,
+                        "black");
             }
         });
 
         this.setOnMouseReleased(event -> {
-            myGC.beginPath();
+            //myGC.beginPath();
+            ServerConnector.getInstance().endPathDrawingWindow();
         });
 
         this.setOnMouseDragged(event -> {
 
             //this.getGraphicsContext2D().moveTo(event.getX()-1,event.getY()-1);
-            myGC.lineTo(event.getX(), event.getY());
-            myGC.stroke();
+            /*myGC.lineTo(event.getX(), event.getY());
+            myGC.stroke();*/
 
+            ServerConnector.getInstance().drawLine(
+                    event.getX(),
+                    event.getY()
+            );
         });
+    }
+
+
+
+
+    public void beginPath(double x, double y, String color, double thickness){
+        myGC.moveTo(x, y);
+        Color myColor = Color.BLACK;
+        switch (color){
+            case "black":
+                myColor = Color.BLACK;
+                break;
+            case "white":
+                myColor = Color.WHITE;
+            default:
+        }
+
+        myGC.setStroke(myColor);
+        myGC.setLineWidth(thickness);
+    }
+
+    public void endPath(){
+        myGC.beginPath();
+    }
+
+    public void drawLine(double x, double y){
+        myGC.lineTo(x, y);
+        myGC.stroke();
     }
 
 
