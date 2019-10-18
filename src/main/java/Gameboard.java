@@ -204,7 +204,7 @@ class Gameboard {
         / Making Borders for Streamers Cams
          */
         ArrayList<Rectangle> cams = new ArrayList<Rectangle>();
-
+        rects.add(start_rec);
         for(int i=0;i<6;i++){
             Rectangle cam = new Rectangle(3*field_size-10,2*field_size-10);
             cam.setStroke(Color.rgb(36, 123, 160));
@@ -230,6 +230,9 @@ class Gameboard {
             cams.get(i).setY(4*field_size+5);
             backframe.getChildren().add(cams.get(i));
         }
+
+        rects.add(goal_rect);
+
         /*
         * Adding Nametags to every Streamers Cam
         * */
