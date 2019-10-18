@@ -62,6 +62,9 @@ class ServerConnector {
                                 gameboard.drawCard(input.getString("word"), input.getInt("value"));
 
                                 break;
+                            case "DrawingWindow":
+                                handleDrawingEvent(input);
+                                break;
                             default:
                                 System.out.println("Unknown type " + input.getString("event"));
                         }
@@ -140,5 +143,79 @@ class ServerConnector {
 
     void setGameboard(Gameboard gameboard) {
         this.gameboard = gameboard;
+    }
+
+
+    private void handleDrawingEvent(JSONObject event){
+        switch (event.getString("action")){
+            case "open":
+
+
+                break;
+            case "close":
+                break;
+            case "beginPath":
+                break;
+            case "endPath":
+                break;
+            case "drawLine":
+                break;
+            default:
+                System.out.println("Unknown drawing action: " +event.getString("action"));
+        }
+    }
+
+
+    public void openDrawingWindow(){
+        JSONObject answer = new JSONObject();
+
+        answer.put("event", "DrawingWindow");
+        answer.put("action", "open");
+        sendMessage(answer.toString());
+    }
+
+
+    public void closeDrawingWindow(){
+        JSONObject answer= new JSONObject();
+
+        answer.put("event", "DrawingWindow");
+        answer.put("action", "close");
+        sendMessage(answer.toString());
+    }
+
+    public void beginPathDrawingWindow(double x, double y, double thickness, String color){
+
+        JSONObject answer = new JSONObject();
+
+        answer.put("event", "DrawingWindow");
+        answer.put("action", "beginPath");
+        answer.put("x", x);
+        answer.put("y", y);
+        answer.put("thickness", thickness);
+        answer.put("color", color);
+
+        sendMessage(answer.toString());
+    }
+
+    public void endPathDrawingWindow(){
+
+        JSONObject answer = new JSONObject();
+
+        answer.put("event", "DrawingWindow");
+        answer.put("action", "endPath");
+
+        sendMessage(answer.toString());
+    }
+
+    public void drawLine(double x, double y){
+
+        JSONObject answer = new JSONObject();
+
+        answer.put("event", "DrawingWindow");
+        answer.put("action", "drawLine");
+        answer.put("x", x);
+        answer.put("y", y);
+
+        sendMessage(answer.toString());
     }
 }

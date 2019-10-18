@@ -63,6 +63,10 @@ public class GameController {
                 case "moveStone":
                     moveStone(input.getInt("position"), input.getString("color"));
                     break;
+
+                case "DrawingWindow":
+                    handleDrawingEvent(input,sender);
+                    break;
                 default:
                     System.out.println("Unknown event: " + input.get("Event"));
             }
@@ -119,4 +123,102 @@ public class GameController {
         sendMessage(answer.toString(),sender);
 
     }
+
+
+    private void handleDrawingEvent(JSONObject event, Socket sender){
+        switch (event.getString("action")){
+            case "open":
+                openDrawingWindow(sender);
+                break;
+            case "close":
+                closeDrawingWindow();
+                break;
+            case "beginPath":
+                beginPathDrawingWindow(
+                        event.getDouble("x"),
+                        event.getDouble("y"),
+                        event.getDouble("thickness"),
+                        event.getString("color")
+                );
+                break;
+            case "endPath":
+                endPathDrawingWindow();
+                break;
+            case "drawLine":
+                drawLine(
+                        event.getDouble("x"),
+                        event.getDouble("y")
+                );
+                break;
+            default:
+                System.out.println("Unknown drawing action: " +event.getString("action"));
+        }
+
+    }
+
+
+    private void openDrawingWindow(Socket sender){
+        JSONObject answerOne = new JSONObject();
+
+        answerOne.put("event", "openDrawingWindow");
+        answerOne.put("active", false);
+        answerOne.put("action", "open");
+
+        JSONObject answerTwo = new JSONObject();
+        answerTwo.put("event", "openDrawingWindow");
+        answerTwo.put("active", true);
+        answerTwo.put("action", "open");
+
+        for (Socket reciever: players) {
+            if (reciever.equals(sender)) sendMessage(answerTwo.toString(),reciever);
+            else sendMessage(answerOne.toString(),reciever);
+        }
+    }
+
+    private void closeDrawingWindow(){
+        JSONObject answer= new JSONObject();
+
+        answer.put("event", "DrawingWindow");
+        answer.put("action", "close");
+
+        players.forEach(player -> sendMessage(answer.toString(),player));
+    }
+
+    private void beginPathDrawingWindow(double x, double y, double thickness, String color){
+
+        JSONObject answer = new JSONObject();
+
+        answer.put("event", "DrawingWindow");
+        answer.put("action", "beginPath");
+        answer.put("x", x);
+        answer.put("y", y);
+        answer.put("thickness", thickness);
+        answer.put("color", color);
+
+        players.forEach(player -> sendMessage(answer.toString(),player));
+    }
+
+    private void endPathDrawingWindow(){
+
+        JSONObject answer = new JSONObject();
+
+        answer.put("event", "DrawingWindow");
+        answer.put("action", "endPath");
+
+        players.forEach(player -> sendMessage(answer.toString(),player));
+    }
+
+    private void drawLine(double x, double y){
+
+        JSONObject answer = new JSONObject();
+
+        answer.put("event", "DrawingWindow");
+        answer.put("action", "drawLine");
+        answer.put("x", x);
+        answer.put("y", y);
+
+        players.forEach(player -> sendMessage(answer.toString(),player));
+    }
+
+
 }
