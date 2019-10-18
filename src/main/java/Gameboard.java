@@ -4,7 +4,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -32,7 +31,10 @@ class Gameboard {
     double window_height;
     double field_size;
 
+    private Text counter_txt;
     private boolean drawMode;
+    private int counter;
+    private int active_card_value;
 
     private Pane stack;
     private Rectangle player1;
@@ -50,8 +52,9 @@ class Gameboard {
         backframe.setMinWidth(window_width);
         backframe.setMinHeight(window_height);
 
+        active_card_value = 3;
         drawMode = false;
-
+        counter = 0;
 
         Scale scale = new Scale(1,1);
         scale.xProperty().bind(stack.widthProperty().divide(width));
@@ -152,6 +155,56 @@ class Gameboard {
         }
        stack.getChildren().add(backframe);
 
+        //Timer GUI
+        VBox time_frame = new VBox();
+        HBox t_top = new HBox();
+        HBox t_bottom = new HBox();
+        time_frame.setMaxSize(field_size,field_size);
+
+        Text timer_label = new Text("Timer: ");
+        Text time = new Text("90");
+        Text sek = new Text("s");
+        timer_label.setFont(new Font("Berlin Sans FB",26));
+        time.setFont(new Font("Berlin Sans FB",75));
+        sek.setFont(new Font("Berlin Sans FB",40));
+
+        timer_label.setFill(Color.WHITE);
+        time.setFill(Color.WHITE);
+        sek.setFill(Color.WHITE);
+
+
+        t_top.getChildren().add(timer_label);
+        t_bottom.getChildren().addAll(time,sek);
+
+        t_top.setAlignment(Pos.BASELINE_LEFT);
+        t_bottom.setAlignment(Pos.CENTER);
+
+        time_frame.getChildren().addAll(t_top,t_bottom);
+        time_frame.setTranslateX(field_size+5);
+        time_frame.setTranslateY(4*field_size+5);
+        stack.getChildren().add(time_frame);
+
+
+        // Scoreboard
+        Text counter_label = new Text("Punkte: ");
+        counter_label.setFont(new Font("Berlin Sans FB",26));
+        counter_label.setFill(Color.WHITE);
+
+        counter_txt = new Text("23");
+        counter_txt.setFont(new Font("Berlin Sans FB",80));
+        counter_txt.setFill(Color.WHITE);
+
+        VBox score = new VBox(-20);
+        score.setMaxSize(field_size,field_size);
+        score.getChildren().addAll(counter_label, counter_txt);
+
+        score.setTranslateX(field_size+5);
+        score.setTranslateY(field_size+5);
+        score.setAlignment(Pos.CENTER);
+
+        stack.getChildren().add(score);
+
+        // Goal and Start field
         Rectangle goal_rect = new Rectangle(field_size,field_size);
         goal_rect.setFill(goal_patt);
         backframe.getChildren().add(goal_rect);
@@ -199,8 +252,6 @@ class Gameboard {
 
             Rectangle r = (Rectangle) (t.getSource());
             r.toFront();
-
-
         });
         player2.setOnMouseDragged((t) -> {
 
@@ -224,6 +275,7 @@ class Gameboard {
         cards[2] = card5;
 
         for(int i=0;i<cards.length;i++){
+            cards[i].setCursor(Cursor.HAND);
             cards[i].setPreserveRatio(true);
             cards[i].setFitHeight(field_size-10);
             cards[i].setY(2*field_size+5);
@@ -253,7 +305,7 @@ class Gameboard {
             Rectangle cam = new Rectangle(3*field_size-10,2*field_size-10);
             cam.setStroke(Color.rgb(36, 123, 160));
             cam.setStrokeWidth(10);
-            //cam.setFill(Color.rgb(0,255,0));
+            cam.setFill(Color.rgb(0,255,0));
             cams.add(cam);
         }
         cams.get(0).setX(2*field_size+5);
@@ -366,15 +418,21 @@ class Gameboard {
     void drawCard(String word,int value) {
         Platform.runLater(()-> {
             if(!drawMode) {
+                counter = 0;
+                counter_txt.setText("0");
+
+                active_card_value = value;
                 popup = new Popup_card(word, field_size + 10,this,value);
                 popup.setTranslateX(rects.get(21).getBoundsInLocal().getMinX() - popup.getBoundsInParent().getWidth() / 2);
                 popup.setTranslateY(rects.get(21).getBoundsInLocal().getMinY() - 8);
                 stack.getChildren().add(popup);
+                drawMode = true;
 
                 for (ImageView card : cards) {
                     card.setDisable(true);
                 }
             }else{
+                active_card_value = value;
                 stack.getChildren().remove(popup);
                 popup = new Popup_card(word, field_size + 10,this,value);
                 popup.setTranslateX(rects.get(21).getBoundsInLocal().getMinX() - popup.getBoundsInParent().getWidth() / 2);
@@ -386,4 +444,8 @@ class Gameboard {
     }
 
 
+    public void increaseCounter() {
+        counter = counter + active_card_value;
+        counter_txt.setText(""+counter);
+    }
 }

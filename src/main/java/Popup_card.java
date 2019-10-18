@@ -1,3 +1,4 @@
+import javafx.scene.Cursor;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -49,6 +50,20 @@ public class Popup_card extends HBox {
         bound.setEffect(new DropShadow(10,10,10, Color.BLACK));
 
         check.setOnMouseClicked(event -> {
+            parent.increaseCounter();
+            String message =  new JSONStringer().object()
+                    .key("event").value("drawCard")
+                    .key("type").value(value)
+                    .endObject().toString();
+
+            System.out.println("Sending message: " +message);
+
+            ServerConnector.getInstance().sendMessage(message);
+        });
+        cross.setCursor(Cursor.HAND);
+        check.setCursor(Cursor.HAND);
+
+        cross.setOnMouseClicked(event -> {
             String message =  new JSONStringer().object()
                     .key("event").value("drawCard")
                     .key("type").value(value)
