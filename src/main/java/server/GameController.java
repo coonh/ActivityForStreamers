@@ -6,9 +6,7 @@ import org.json.JSONObject;
 import java.beans.Expression;
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class GameController {
 
@@ -16,10 +14,14 @@ public class GameController {
     ArrayList<Socket> players;
     HashMap<String, Integer> stones;
 
+    boolean timerRunning;
+
 
     public GameController() {
         this.players = new ArrayList<>();
         stones = new HashMap<>();
+
+        timerRunning = false;
 
         stones.put("red", 0);
         stones.put("blue", 0);
@@ -67,6 +69,9 @@ public class GameController {
                 case "DrawingWindow":
                     handleDrawingEvent(input,sender);
                     break;
+                case "timer":
+                    startTimer();
+                    break;
                 default:
                     System.out.println("Unknown event: " + input.get("Event"));
             }
@@ -74,6 +79,36 @@ public class GameController {
             System.out.println("Error with " + input.toString());
         }
 
+    }
+
+    private void startTimer() {
+        if(timerRunning){
+            return;
+        }else {
+            timerRunning = true;
+            Timer timer = new Timer();
+            TimerTask task = new TimerTask() {
+                int sec = 90;
+
+                @Override
+                public void run() {
+                    JSONObject answer = new JSONObject();
+                    answer.put("event", "receiveTimer");
+                    answer.put("sec", sec);
+
+
+                    players.forEach(player -> sendMessage(answer.toString(), player));
+
+                    if (sec <= 0){
+                        timer.cancel();
+                        timerRunning = false;
+                    }
+                    sec--;
+
+                }
+            };
+            timer.scheduleAtFixedRate(task, 0, 1000);
+        }
     }
 
     private void moveStone(int newPosition, String color){

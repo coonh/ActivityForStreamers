@@ -13,7 +13,7 @@ public class DrawingWindow extends Canvas {
     GraphicsContext myGC;
 
     public DrawingWindow(){
-        super(700,700);
+        super(926,514);
         
         
         myGC = this.getGraphicsContext2D();
@@ -28,9 +28,9 @@ public class DrawingWindow extends Canvas {
     public void activateEventHandler(){
         this.setOnMousePressed(event -> {
             if (event.getButton().equals(MouseButton.SECONDARY)){
-                /*myGC.moveTo(event.getX(), event.getY());
+                myGC.moveTo(event.getX(), event.getY());
                 myGC.setStroke(Color.WHITE);
-                myGC.setLineWidth(100);*/
+                myGC.setLineWidth(100);
                 ServerConnector.getInstance().beginPathDrawingWindow(
                         event.getX(),
                         event.getY(),
@@ -38,9 +38,9 @@ public class DrawingWindow extends Canvas {
                         "white");
 
             }else {
-                /*myGC.setLineWidth(8);
+                myGC.setLineWidth(8);
                 myGC.moveTo(event.getX(), event.getY());
-                myGC.setStroke(Color.BLACK);*/
+                myGC.setStroke(Color.BLACK);
 
                 ServerConnector.getInstance().beginPathDrawingWindow(
                         event.getX(),
@@ -51,15 +51,15 @@ public class DrawingWindow extends Canvas {
         });
 
         this.setOnMouseReleased(event -> {
-            //myGC.beginPath();
+            myGC.beginPath();
             ServerConnector.getInstance().endPathDrawingWindow();
         });
 
         this.setOnMouseDragged(event -> {
 
-            //this.getGraphicsContext2D().moveTo(event.getX()-1,event.getY()-1);
-            /*myGC.lineTo(event.getX(), event.getY());
-            myGC.stroke();*/
+            this.getGraphicsContext2D().moveTo(event.getX()-1,event.getY()-1);
+            myGC.lineTo(event.getX(), event.getY());
+            myGC.stroke();
 
             ServerConnector.getInstance().drawLine(
                     event.getX(),

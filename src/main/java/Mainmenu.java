@@ -71,7 +71,7 @@ public class Mainmenu {
 
             stage.setScene(g.scene);
             stage.centerOnScreen();
-            ServerConnector.getInstance().startRecieving();
+            ServerConnector.getInstance().startReceiving();
             g.show(stage);
         });
 

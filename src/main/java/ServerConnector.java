@@ -38,7 +38,7 @@ class ServerConnector {
             writer.flush();
     }
 
-    void startRecieving(){
+    void startReceiving(){
         new Thread(() -> {
 
             System.out.println("Start recieving");
@@ -64,6 +64,11 @@ class ServerConnector {
                                 break;
                             case "DrawingWindow":
                                 handleDrawingEvent(input);
+                                break;
+                            case "receiveTimer":
+                                gameboard.timerAnimation();
+                                gameboard.timerUpdate(input.getInt("sec"));
+
                                 break;
                             default:
                                 System.out.println("Unknown type " + input.getString("event"));
