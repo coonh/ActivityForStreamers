@@ -228,19 +228,6 @@ class Gameboard {
         frame.getChildren().add(re);
 
         drawBtn.setOnMouseClicked(event -> {
-            //TODO open a draw field
-            /*if(!paintMode){
-                d = new DrawingWindow();
-                d.setTranslateX(2*field_size);
-                d.setTranslateY(field_size);
-                frame.getChildren().add(d);
-                stack.getChildren().add(frame);
-                paintMode = true;
-            }else{
-                frame.getChildren().remove(d);
-                stack.getChildren().remove(frame);
-                paintMode = false;
-            }*/
             if(d==null) ServerConnector.getInstance().openDrawingWindow();
             else ServerConnector.getInstance().closeDrawingWindow();
         });
@@ -639,7 +626,6 @@ class Gameboard {
                 d.setTranslateY(field_size);
                 frame.getChildren().add(d);
                 stack.getChildren().add(frame);
-                paintMode = true;
             }
         });
 
@@ -656,7 +642,6 @@ class Gameboard {
                 if (d!=null){
                     frame.getChildren().remove(d);
                     d = null;
-                    paintMode = false;
                     stack.getChildren().remove(frame);
                 }
             }
