@@ -154,16 +154,28 @@ class ServerConnector {
     private void handleDrawingEvent(JSONObject event){
         switch (event.getString("action")){
             case "open":
-
+                gameboard.openDrawingWindow(event.getBoolean("active"));
 
                 break;
             case "close":
+                gameboard.closeDrawingWindow();
                 break;
             case "beginPath":
+                gameboard.getDrawingWindow().beginPath(
+                        event.getDouble("x"),
+                        event.getDouble("y"),
+                        event.getString("color"),
+                        event.getDouble("thickness")
+                );
                 break;
             case "endPath":
+                gameboard.getDrawingWindow().endPath();
                 break;
             case "drawLine":
+                gameboard.getDrawingWindow().drawLine(
+                        event.getDouble("x"),
+                        event.getDouble("y")
+                );
                 break;
             default:
                 System.out.println("Unknown drawing action: " +event.getString("action"));

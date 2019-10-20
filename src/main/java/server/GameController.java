@@ -195,12 +195,12 @@ public class GameController {
     private void openDrawingWindow(Socket sender){
         JSONObject answerOne = new JSONObject();
 
-        answerOne.put("event", "openDrawingWindow");
+        answerOne.put("event", "DrawingWindow");
         answerOne.put("active", false);
         answerOne.put("action", "open");
 
         JSONObject answerTwo = new JSONObject();
-        answerTwo.put("event", "openDrawingWindow");
+        answerTwo.put("event", "DrawingWindow");
         answerTwo.put("active", true);
         answerTwo.put("action", "open");
 
@@ -255,5 +255,13 @@ public class GameController {
         players.forEach(player -> sendMessage(answer.toString(),player));
     }
 
+
+    protected void deletePlayer(Socket player){
+        try{
+            players.remove(player);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 }

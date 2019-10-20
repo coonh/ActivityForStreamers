@@ -47,7 +47,12 @@ public class InputListener {
                 }
             } catch (IOException e){
                 System.err.println("error while listening");
-                e.printStackTrace();
+                System.err.println("Deleting the player");
+                gameController.deletePlayer(me);
+                try {
+                    me.close();
+                } catch (IOException ex) {
+                }
                 return;
             } catch (JSONException ex){
                 System.out.println("Error building JSON from: " + message);

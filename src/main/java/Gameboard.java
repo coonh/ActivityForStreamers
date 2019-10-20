@@ -55,6 +55,7 @@ class Gameboard {
     private Rectangle player1;
     private Rectangle player2;
     private ImageView [] cards;
+    private Pane frame;
 
     Gameboard(Stage stage, double width, double height){
         this.stage = stage;
@@ -66,6 +67,7 @@ class Gameboard {
         Pane backframe= new Pane();
         backframe.setMinWidth(window_width);
         backframe.setMinHeight(window_height);
+
 
 
 
@@ -218,7 +220,7 @@ class Gameboard {
         drawBtn.setTranslateY(4*field_size);
 
 
-        Pane frame = new Pane();
+        frame = new Pane();
         Rectangle re = new Rectangle(926,514);
         re.setFill(Color.WHITE);
         re.setTranslateX(2*field_size);
@@ -227,7 +229,7 @@ class Gameboard {
 
         drawBtn.setOnMouseClicked(event -> {
             //TODO open a draw field
-            if(!paintMode){
+            /*if(!paintMode){
                 d = new DrawingWindow();
                 d.setTranslateX(2*field_size);
                 d.setTranslateY(field_size);
@@ -238,8 +240,9 @@ class Gameboard {
                 frame.getChildren().remove(d);
                 stack.getChildren().remove(frame);
                 paintMode = false;
-            }
-
+            }*/
+            if(d==null) ServerConnector.getInstance().openDrawingWindow();
+            else ServerConnector.getInstance().closeDrawingWindow();
         });
         stack.getChildren().add(drawBtn);
 
@@ -623,6 +626,43 @@ class Gameboard {
 
         ServerConnector.getInstance().sendMessage(message);
         ServerConnector.getInstance().sendMessage(message2);
+
+    }
+
+    protected void openDrawingWindow(boolean active){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                d = new DrawingWindow();
+                if (active) d.activateEventHandler();
+                d.setTranslateX(2*field_size);
+                d.setTranslateY(field_size);
+                frame.getChildren().add(d);
+                stack.getChildren().add(frame);
+                paintMode = true;
+            }
+        });
+
+    }
+
+    public DrawingWindow getDrawingWindow() {
+        return d;
+    }
+
+    protected void closeDrawingWindow(){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if (d!=null){
+                    frame.getChildren().remove(d);
+                    d = null;
+                    paintMode = false;
+                    stack.getChildren().remove(frame);
+                }
+            }
+        });
+
+
 
     }
 }
