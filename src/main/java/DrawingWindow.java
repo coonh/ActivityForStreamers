@@ -21,7 +21,7 @@ public class DrawingWindow extends Canvas {
 
         myGC.setFill(Color.BLACK);
         myGC.setLineWidth(8);
-        activateEventHandler();
+        //activateEventHandler();
     }
     
     
