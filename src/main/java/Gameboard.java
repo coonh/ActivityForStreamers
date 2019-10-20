@@ -40,11 +40,11 @@ class Gameboard {
     private Text counter_txt;
     private boolean drawMode;
 
-    private boolean paintMode;
     private int counter;
     private int active_card_value;
 
     private ImageView stopwatch;
+    private ImageView trashcan;
     private Image img_stopwatch_anim, img_stopwatch;
 
     private AudioClip beep1, beep2;
@@ -73,7 +73,7 @@ class Gameboard {
 
         active_card_value = 3;
         drawMode = false;
-        paintMode = false;
+
         counter = 0;
 
         Scale scale = new Scale(1,1);
@@ -105,9 +105,11 @@ class Gameboard {
         Image img_card_pack_3 = new Image(this.getClass().getResourceAsStream("/img/card_pack_3.png"));
         Image img_card_pack_4 = new Image(this.getClass().getResourceAsStream("/img/card_pack_4.png"));
         Image img_card_pack_5 = new Image(this.getClass().getResourceAsStream("/img/card_pack_5.png"));
+        Image img_trash_can = new Image(this.getClass().getResourceAsStream("/img/trashcan.png"));
 
         img_stopwatch_anim = new Image(this.getClass().getResourceAsStream("/img/stopwatch.gif"));
         img_stopwatch = new Image(this.getClass().getResourceAsStream("/img/stopwatch.png"));
+        trashcan = new ImageView(img_trash_can);
 
         ImagePattern field_patt_1 = new ImagePattern(field_graf_1);
         ImagePattern field_patt_2 = new ImagePattern(field_graf_2);
@@ -218,6 +220,11 @@ class Gameboard {
         drawBtn.setPreserveRatio(true);
         drawBtn.setTranslateX(11*field_size);
         drawBtn.setTranslateY(4*field_size);
+
+        trashcan.setFitHeight(field_size/2);
+        trashcan.setPreserveRatio(true);
+        trashcan.setTranslateX(2.5*field_size);
+        trashcan.setTranslateY(1.5*field_size);
 
 
         frame = new Pane();
@@ -543,7 +550,10 @@ class Gameboard {
                 stack.getChildren().remove(popup);
                 popup = new Popup_card(word, field_size + 10,this,value);
                 popup.setTranslateX(rects.get(21).getBoundsInLocal().getMinX() - popup.getBoundsInParent().getWidth() / 2);
-                popup.setTranslateY(rects.get(21).getBoundsInLocal().getMinY() - 8);
+
+                if(d!=null) setPopupToFront();
+                else popup.setTranslateY(rects.get(21).getBoundsInLocal().getMinY() - 8);
+
                 stack.getChildren().add(popup);
             }
         });
@@ -626,6 +636,8 @@ class Gameboard {
                 d.setTranslateY(field_size);
                 frame.getChildren().add(d);
                 stack.getChildren().add(frame);
+                setPopupToFront();
+
             }
         });
 
@@ -648,6 +660,14 @@ class Gameboard {
         });
 
 
+
+    }
+
+    public void setPopupToFront() {
+        if(popup!=null){
+            popup.toFront();
+            popup.setTranslateY(field_size/4);
+        }
 
     }
 }
