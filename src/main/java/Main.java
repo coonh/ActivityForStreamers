@@ -1,16 +1,12 @@
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 import server.ServerMain;
-
 
 
 public class Main extends Application {
 
     private Stage main_stage;
-
 
     public static void main(String[] args) {
         if (args.length > 0 && args[0].toLowerCase().equals("server")){

@@ -57,6 +57,8 @@ class Gameboard {
     private ImageView [] cards;
     private Pane frame;
 
+    private ImageView drawBtn;
+
     Gameboard(Stage stage, double width, double height){
         this.stage = stage;
         window_width=width;
@@ -213,7 +215,7 @@ class Gameboard {
        stack.getChildren().add(backframe);
 
         // Open a Drawfield
-        ImageView drawBtn = new ImageView(img_draw);
+        drawBtn = new ImageView(img_draw);
         drawBtn.setFitHeight(field_size/2);
         drawBtn.setPreserveRatio(true);
         drawBtn.setTranslateX(11*field_size);
@@ -622,6 +624,7 @@ class Gameboard {
             public void run() {
                 d = new DrawingWindow();
                 if (active) d.activateEventHandler();
+                else drawBtn.setMouseTransparent(true);
                 d.setTranslateX(2*field_size);
                 d.setTranslateY(field_size);
                 frame.getChildren().add(d);
@@ -643,6 +646,7 @@ class Gameboard {
                     frame.getChildren().remove(d);
                     d = null;
                     stack.getChildren().remove(frame);
+                    drawBtn.setMouseTransparent(false);
                 }
             }
         });
