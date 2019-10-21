@@ -48,7 +48,7 @@ public class MainCam extends Application {
 
 
 
-        webcam.getDevice().setResolution(WebcamResolution.QHD.getSize());
+        webcam.getDevice().setResolution(WebcamResolution.NHD.getSize());
 
         for (Dimension dimension:webcam.getViewSizes()) {
             System.out.println(dimension.toString());
@@ -77,6 +77,8 @@ public class MainCam extends Application {
                         if ((img = webcam.getImage()) != null){
 
                             ByteArrayOutputStream baos = new ByteArrayOutputStream(1000);
+
+                            System.out.println(img.getWidth() + "  " + img.getHeight());
 
                             ImageIO.write(img,"JPG", baos);
                             baos.flush();
