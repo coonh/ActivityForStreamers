@@ -48,7 +48,8 @@ public class MainCam extends Application {
 
 
 
-        webcam.getDevice().setResolution(WebcamResolution.NHD.getSize());
+        //webcam.getDevice().setResolution(WebcamResolution.NHD.getSize());
+        webcam.setViewSize(WebcamResolution.NHD.getSize());
 
         for (Dimension dimension:webcam.getViewSizes()) {
             System.out.println(dimension.toString());
