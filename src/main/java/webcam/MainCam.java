@@ -48,7 +48,7 @@ public class MainCam extends Application {
 
 
 
-        webcam.getDevice().setResolution(WebcamResolution.NHD.getSize());
+        webcam.getDevice().setResolution(WebcamResolution.QHD.getSize());
 
         for (Dimension dimension:webcam.getViewSizes()) {
             System.out.println(dimension.toString());
@@ -81,7 +81,7 @@ public class MainCam extends Application {
                             ImageIO.write(img,"JPG", baos);
                             baos.flush();
 
-                            String input = Base64.getEncoder().encodeToString(baos.toByteArray());
+                            String input = new String(Base64.getEncoder().encode(baos.toByteArray()), "UTF8");
                             baos.close();
                             //System.out.println(input);
                             byte[] bytes = Base64.getDecoder().decode(input);
