@@ -73,7 +73,7 @@ public class MainCam extends Application {
 
                             ByteArrayOutputStream baos = new ByteArrayOutputStream(1000);
 
-                            //ImageIO.write(img,"JPG", baos);
+                            ImageIO.write(img,"JPG", baos);
                             baos.flush();
 
                             String input = Base64.getEncoder().encodeToString(baos.toByteArray());
