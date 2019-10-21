@@ -69,7 +69,9 @@ class ServerConnector {
                             case "receiveTimer":
                                 gameboard.timerAnimation();
                                 gameboard.timerUpdate(input.getInt("sec"));
-
+                                break;
+                            case "newTeams":
+                                gameboard.setTeams(input.getInt("value1"),input.getInt("value2"),input.getInt("value3"));
                                 break;
                             default:
                                 System.out.println("Unknown type " + input.getString("event"));
@@ -235,5 +237,14 @@ class ServerConnector {
         answer.put("y", y);
 
         sendMessage(answer.toString());
+    }
+
+    public void pickTeams() {
+        JSONObject answer = new JSONObject();
+
+        answer.put("event","generateTeams");
+
+        sendMessage(answer.toString());
+
     }
 }

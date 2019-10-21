@@ -74,12 +74,32 @@ public class GameController {
                 case "timer":
                     startTimer();
                     break;
+                case "generateTeams":
+                    generateTeams();
+                    break;
                 default:
                     System.out.println("Unknown event: " + input.get("Event"));
             }
         } catch (Exception e){
             System.out.println("Error with " + input.toString());
         }
+
+    }
+
+    private void generateTeams() {
+        ArrayList<Integer> w = new ArrayList<>();
+        for(int i=0;i<6;i++){
+            w.add(i);
+        }
+        Collections.shuffle(w);
+        System.out.println("Array: "+ w.get(0));
+        JSONObject answer = new JSONObject();
+        answer.put("event","newTeams");
+        answer.put("value1",w.get(0));
+        answer.put("value2",w.get(1));
+        answer.put("value3",w.get(2));
+
+        players.forEach(player -> sendMessage(answer.toString(),player));
 
     }
 

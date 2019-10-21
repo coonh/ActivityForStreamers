@@ -4,8 +4,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
@@ -17,7 +20,6 @@ import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import org.json.JSONStringer;
-
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -418,28 +420,22 @@ class Gameboard {
 
         for(int i=0;i<6;i++){
             Rectangle cam = new Rectangle(3*field_size-10,2*field_size-10);
-            cam.setStroke(Color.rgb(36, 123, 160));
             cam.setStrokeWidth(10);
             //cam.setFill(Color.rgb(0,255,0));
             cams.add(cam);
         }
         cams.get(0).setX(2*field_size+5);
         cams.get(0).setY(field_size+5);
-        backframe.getChildren().add(cams.get(0));
-        for(int i=1;i<3;i++){
-            cams.get(i).setX(cams.get(i-1).getX()+3*field_size);
-            cams.get(i).setY(field_size+5);
-            backframe.getChildren().add(cams.get(i));
-        }
         cams.get(3).setX(2*field_size+5);
         cams.get(3).setY(4*field_size+5);
-        backframe.getChildren().add(cams.get(3));
-        cams.get(3).setStroke(Color.rgb(242,95,92));
-        for(int i=4;i<6;i++){
-            cams.get(i).setStroke(Color.rgb(242,95,92));
+        backframe.getChildren().addAll(cams.get(0),cams.get(3));
+        for(int i=1;i<3;i++){
             cams.get(i).setX(cams.get(i-1).getX()+3*field_size);
-            cams.get(i).setY(4*field_size+5);
+            cams.get(i+3).setX(cams.get(i-1).getX()+3*field_size);
+            cams.get(i).setY(field_size+5);
+            cams.get(i+3).setY(4*field_size+5);
             backframe.getChildren().add(cams.get(i));
+            backframe.getChildren().add(cams.get(i+3));
         }
 
         /*
@@ -450,6 +446,25 @@ class Gameboard {
         for (Rectangle cam : cams){
             Text name_tag = new Text("twitch.tv/"+streamer[cams.indexOf(cam)]);
             HBox name_1 = new HBox();
+            name_1.setOnMouseClicked(event -> {
+                if(event.getButton() == MouseButton.SECONDARY){
+                    name_1.setDisable(true);
+                    HBox h = new HBox(2);
+                    TextField t = new TextField(name_tag.getText());
+                    Button k = new Button("ok");
+                    h.getChildren().addAll(t,k);
+                    backframe.getChildren().add(h);
+                    h.setTranslateX(event.getSceneX());
+                    h.setTranslateY(event.getSceneY());
+
+                    k.setOnAction(event1 -> {
+                        name_1.setDisable(false);
+                        name_tag.setText(t.getText());
+                        backframe.getChildren().remove(h);
+                    });
+
+                }
+            });
             name_1.setMinWidth(cam.getWidth()/2);
             name_1.getChildren().add(name_tag);
             name_tag.setFill(Color.rgb(80,81,79));
@@ -597,19 +612,7 @@ class Gameboard {
         stopwatch.setImage(img_stopwatch_anim);
     }
     private void generateTeams(){
-        Color blue = Color.rgb(36, 123, 160);
-        Color red = Color.rgb(242,95,92);
-        for(Rectangle cam : cams){
-            cam.setStroke(blue);
-        }
-        Integer[] choice = new Integer[]{0, 1, 2, 3, 4, 5};
-
-        List<Integer> l = Arrays.asList(choice);
-
-        Collections.shuffle(l);
-        for(int i=0;i<3;i++){
-            cams.get(choice[i]).setStroke(red);
-        }
+        ServerConnector.getInstance().pickTeams();
 
         String message =  new JSONStringer().object()
                 .key("event").value("moveStone")
@@ -673,5 +676,14 @@ class Gameboard {
             popup.setTranslateY(field_size/4);
         }
 
+    }
+
+    public void setTeams(int value1, int value2, int value3) {
+        for (Rectangle cam : cams){
+            cam.setStroke(Color.rgb(36, 123, 160));
+        }
+        cams.get(value1).setStroke(Color.rgb(242,95,92));
+        cams.get(value2).setStroke(Color.rgb(242,95,92));
+        cams.get(value3).setStroke(Color.rgb(242,95,92));
     }
 }
