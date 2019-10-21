@@ -15,22 +15,19 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import org.bytedeco.javacv.ImageTransformer;
-import org.bytedeco.javacv.ImageTransformerCL;
 
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.nio.ByteBuffer;
 import java.util.Base64;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MainCam extends Application {
 
 
+    Webcam webcam;
     ImageView showImage;
     private ObjectProperty<Image> imageProperty = new SimpleObjectProperty<>();
 
@@ -44,10 +41,10 @@ public class MainCam extends Application {
 
         Webcam.setDriver(new JavaCvDriver());
 
-        Webcam webcam = Webcam.getDefault();
 
 
 
+        webcam  = Webcam.getDefault();
 
 
         webcam.getDevice().setResolution(WebcamResolution.NHD.getSize());
@@ -75,7 +72,9 @@ public class MainCam extends Application {
                 BufferedImage img = null;
                 BufferedImage resized;
 
-                while(true){
+                Boolean isRunning = true;
+
+                while(isRunning){
                     try{
                         if ((img = webcam.getImage()) != null){
 
@@ -83,16 +82,14 @@ public class MainCam extends Application {
 
                             ByteArrayOutputStream baos = new ByteArrayOutputStream(1000);
 
-                            System.out.println(img.getWidth() + "  " + img.getHeight());
-
                             ImageIO.write(img,"JPG", baos);
                             baos.flush();
 
                             String input = new String(Base64.getEncoder().encode(baos.toByteArray()), "UTF8");
                             baos.close();
                             //System.out.println(input);
-                            byte[] bytes = Base64.getDecoder().decode(input);
-                            img = ImageIO.read(new ByteArrayInputStream(bytes));
+                            //byte[] bytes = Base64.getDecoder().decode(input);
+                            //img = ImageIO.read(new ByteArrayInputStream(bytes));
                             ref.set(SwingFXUtils.toFXImage(img,ref.get()));
                             img.flush();
 
@@ -102,12 +99,12 @@ public class MainCam extends Application {
                                     imageProperty.set(ref.get());
                                 }
                             });
-                            Thread.sleep(33);
                         }
                     } catch (Exception e){
+                        isRunning = false;
                         e.printStackTrace();
                     }
-                }
+                } return null;
             }
         };
 
@@ -133,4 +130,10 @@ public class MainCam extends Application {
         return resizedImage;
     }
 
+    @Override
+    public void stop() {
+        webcam.close();
+        System.exit(0);
+
+    }
 }

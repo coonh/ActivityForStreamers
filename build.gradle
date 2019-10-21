@@ -17,4 +17,6 @@ dependencies {
     compile 'org.json:json:20190722'
     compile group: 'com.github.sarxos', name: 'webcam-capture', version: '0.3.12'
     compile group: 'com.github.sarxos', name: 'webcam-capture-driver-opencv', version: '0.3.12'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28'
+    compile group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.28'
 }
