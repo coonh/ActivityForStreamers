@@ -2,6 +2,7 @@ package webcam;
 
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamResolution;
+import com.github.sarxos.webcam.ds.javacv.JavaCvDriver;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -14,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -38,7 +40,10 @@ public class MainCam extends Application {
     public void start(Stage primaryStage) throws Exception {
         showImage = new ImageView();
 
+        Webcam.setDriver(new JavaCvDriver());
+
         Webcam webcam = Webcam.getDefault();
+
 
 
 
@@ -54,7 +59,7 @@ public class MainCam extends Application {
 
         //webcam.setViewSize(WebcamResolution.VGA.getSize());
 
-        webcam.open();
+        webcam.open(true);
 
 
         System.out.println(webcam.getName());
@@ -90,6 +95,7 @@ public class MainCam extends Application {
                                     imageProperty.set(ref.get());
                                 }
                             });
+                            Thread.sleep(33);
                         }
                     } catch (Exception e){
                         e.printStackTrace();
