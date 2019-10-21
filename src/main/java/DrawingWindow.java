@@ -97,4 +97,7 @@ public class DrawingWindow extends Canvas {
     }
 
 
+    public void clear() {
+        this.myGC.clearRect(0,0,this.getWidth(),this.getHeight());
+    }
 }

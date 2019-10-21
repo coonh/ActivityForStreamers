@@ -15,6 +15,7 @@ public class GameController {
     HashMap<String, Integer> stones;
 
     boolean timerRunning;
+    boolean isDrawing;
 
 
     public GameController() {
@@ -22,6 +23,7 @@ public class GameController {
         stones = new HashMap<>();
 
         timerRunning = false;
+        isDrawing = false;
 
         stones.put("red", 0);
         stones.put("blue", 0);
@@ -154,6 +156,7 @@ public class GameController {
         answer.put("event", "recieveCard");
         answer.put("word", word);
         answer.put("value",value);
+        answer.put("isDrawing", isDrawing);
 
         sendMessage(answer.toString(),sender);
 
@@ -163,9 +166,11 @@ public class GameController {
     private void handleDrawingEvent(JSONObject event, Socket sender){
         switch (event.getString("action")){
             case "open":
+                isDrawing = true;
                 openDrawingWindow(sender);
                 break;
             case "close":
+                isDrawing = false;
                 closeDrawingWindow();
                 break;
             case "beginPath":

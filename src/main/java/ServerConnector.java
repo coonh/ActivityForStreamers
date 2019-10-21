@@ -59,6 +59,7 @@ class ServerConnector {
 
                                 break;
                             case "recieveCard":
+                                if(input.getBoolean("isDrawing"))gameboard.getDrawingWindow().clear();
                                 gameboard.drawCard(input.getString("word"), input.getInt("value"));
 
                                 break;
@@ -155,7 +156,7 @@ class ServerConnector {
         switch (event.getString("action")){
             case "open":
                 gameboard.openDrawingWindow(event.getBoolean("active"));
-
+                gameboard.setPopupToFront();
                 break;
             case "close":
                 gameboard.closeDrawingWindow();
