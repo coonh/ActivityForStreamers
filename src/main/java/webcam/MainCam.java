@@ -15,6 +15,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.bytedeco.javacv.ImageTransformer;
+import org.bytedeco.javacv.ImageTransformerCL;
 
 
 import javax.imageio.ImageIO;
@@ -48,8 +50,7 @@ public class MainCam extends Application {
 
 
 
-        //webcam.getDevice().setResolution(WebcamResolution.NHD.getSize());
-        webcam.setViewSize(WebcamResolution.NHD.getSize());
+        webcam.getDevice().setResolution(WebcamResolution.NHD.getSize());
 
         for (Dimension dimension:webcam.getViewSizes()) {
             System.out.println(dimension.toString());
@@ -72,10 +73,13 @@ public class MainCam extends Application {
 
                 final AtomicReference<WritableImage> ref = new AtomicReference<>();
                 BufferedImage img = null;
+                BufferedImage resized;
 
                 while(true){
                     try{
                         if ((img = webcam.getImage()) != null){
+
+                            img = resizeImage(img,img.getType());
 
                             ByteArrayOutputStream baos = new ByteArrayOutputStream(1000);
 
@@ -117,4 +121,16 @@ public class MainCam extends Application {
 
         primaryStage.show();
     }
+
+    private static BufferedImage resizeImage(BufferedImage originalImage, int type){
+        int IMG_WIDTH = 640;
+        int IMG_HEIGHT = 360;
+        BufferedImage resizedImage = new BufferedImage(IMG_WIDTH, IMG_HEIGHT, type);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(originalImage, 0, 0, IMG_WIDTH, IMG_HEIGHT, null);
+        g.dispose();
+
+        return resizedImage;
+    }
+
 }
