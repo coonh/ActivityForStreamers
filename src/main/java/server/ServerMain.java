@@ -1,6 +1,7 @@
 package server;
 
 import org.json.*;
+import webcam.Server;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -14,7 +15,7 @@ public class ServerMain {
 
 
     private ServerSocket serverSocket;
-    private int port = 11000;
+    private static int port = 11000;
     private int version = 1;
     private GameController gameController;
 
@@ -22,6 +23,7 @@ public class ServerMain {
     public static void main(String[] args){
         System.out.println("Server is starting");
         new ServerMain();
+        new webcam.Server();
     }
 
     public ServerMain(){
@@ -82,5 +84,9 @@ public class ServerMain {
             System.out.println("Start listening to new client");
             new InputListener(gameController, client);
         }).start();
+    }
+
+    public static int getPort() {
+        return port;
     }
 }
