@@ -4,14 +4,12 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.media.AudioClip;
-import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -21,8 +19,7 @@ import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import org.json.JSONStringer;
 
-import java.io.File;
-import java.lang.reflect.Array;
+
 import java.util.*;
 
 
@@ -58,13 +55,14 @@ class Gameboard {
     private Rectangle player2;
     private ImageView [] cards;
     private Pane frame;
-
+    private VBox root;
     private ImageView drawBtn;
 
     Gameboard(Stage stage, double width, double height){
         this.stage = stage;
         window_width=width;
         window_height=height;
+        root = new VBox();
         stack = new Pane();
         stack.setPrefHeight(height);
         stack.setMinHeight(height);
@@ -262,7 +260,7 @@ class Gameboard {
         time_frame.setMaxSize(field_size,field_size);
 
         Text timer_label = new Text("Timer: ");
-        time = new Text("90");
+        time = new Text("60");
         Text sek = new Text("s");
         timer_label.setFont(new Font("Berlin Sans FB",26));
         time.setFont(new Font("Berlin Sans FB",75));
@@ -299,7 +297,7 @@ class Gameboard {
         counter_label.setFont(new Font("Berlin Sans FB",26));
         counter_label.setFill(Color.WHITE);
 
-        counter_txt = new Text("23");
+        counter_txt = new Text("0");
         counter_txt.setFont(new Font("Berlin Sans FB",80));
         counter_txt.setFill(Color.WHITE);
 
@@ -484,8 +482,53 @@ class Gameboard {
         player2.setY(start_rec.getY()+start_rec.getHeight()/2-player2.getHeight()/2);
 
 
-        stack.getChildren().addAll(player1,player2);
+        stack.getChildren().addAll(getMenuBar(),player1,player2);
         scene = new Scene(stack);
+    }
+
+    private MenuBar getMenuBar() {
+        //MenuBar initializing
+        MenuBar menubar = new MenuBar();
+        menubar.setOpacity(0);
+        menubar.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
+        stack.widthProperty().addListener((observable, oldValue, newValue) -> menubar.setPrefWidth(stack.widthProperty().get()));
+        menubar.useSystemMenuBarProperty().set(true);
+        menubar.setOnMouseEntered(e ->{ menubar.setOpacity(100);});
+        menubar.setOnMouseExited(e ->{ menubar.setOpacity(0); });
+
+        // Add Menus
+        //Menu1
+        Menu fullscreen = new Menu("Vollbild");
+        MenuItem fs = new MenuItem("Vollbild anzeigen");
+        MenuItem fb = new MenuItem("Vollbild beenden");
+        fullscreen.getItems().addAll(fs,fb);
+        fs.setOnAction(e ->{ stage.setFullScreen(true); });
+        fb.setOnAction( e -> { stage.setFullScreen(false); });
+        //Menu2
+        Menu camSetting = new Menu("Webcam");
+        MenuItem sel = new MenuItem("Webcam auswählen");
+        Menu zoom = new Menu("Zoom");
+        camSetting.getItems().addAll(sel,zoom);
+        CustomMenuItem zoomer = new CustomMenuItem();
+        Slider slid = new Slider(1,2,1);
+        zoomer.setContent(slid);
+        zoom.getItems().add(zoomer);
+
+
+        menubar.getMenus().addAll(fullscreen,camSetting);
+
+        for(Menu m : menubar.getMenus()){
+            setMenuStyle(m);
+        }
+        return menubar;
+    }
+
+    private void setMenuStyle(Menu menu) {
+        menu.setOnShowing(e ->menu.setStyle("-fx-background-color: rgba(52, 152, 235, 0.5);"));
+        menu.setOnHiding(e->menu.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);"));
+        menu.show();
+        menu.hide();
+
     }
 
     private void checkBounds(Rectangle player1,boolean red) {
