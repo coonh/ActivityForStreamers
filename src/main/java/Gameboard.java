@@ -18,8 +18,10 @@ import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import org.json.JSONStringer;
+import webcam.ServerConnection;
 
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 
@@ -415,17 +417,36 @@ class Gameboard {
         / Making Borders for Streamers Cams
          */
         cams = new ArrayList<Rectangle>();
+        ArrayList<ImageView> cam_view = new ArrayList<ImageView>();
+
 
         for(int i=0;i<6;i++){
             Rectangle cam = new Rectangle(3*field_size-10,2*field_size-10);
+            ImageView cview = new ImageView();
+            cam.setOnContextMenuRequested(event -> {
+                ContextMenu context = new ContextMenu();
+                for(String s : ServerConnection.getInstance().getWebcamUserList()){
+                    MenuItem m = new MenuItem(s);
+                    //TODO HANDLE WHAT HAPPENS WHEN U CLICK ON CAMERA
+                    m.setOnAction(event1 -> {
+                        cview.imageProperty().bind(ServerConnection.getInstance().getImagePropertyWithName(m.getText()));
+                    });
+                    context.getItems().add(m);
+                }
+                    context.show(cview,event.getScreenX(),event.getScreenY());
+            });
+
             cam.setStrokeWidth(10);
             //cam.setFill(Color.rgb(0,255,0));
+            cam_view.add(cview);
+            cam.setFill(Color.rgb(0,0,0,0));
             cams.add(cam);
         }
         cams.get(0).setX(2*field_size+5);
         cams.get(0).setY(field_size+5);
         cams.get(3).setX(2*field_size+5);
         cams.get(3).setY(4*field_size+5);
+
         backframe.getChildren().addAll(cams.get(0),cams.get(3));
         for(int i=1;i<3;i++){
             cams.get(i).setX(cams.get(i-1).getX()+3*field_size);
@@ -434,6 +455,15 @@ class Gameboard {
             cams.get(i+3).setY(4*field_size+5);
             backframe.getChildren().add(cams.get(i));
             backframe.getChildren().add(cams.get(i+3));
+        }
+
+        for(int i=0;i<cam_view.size();i++){
+            cam_view.get(i).setX(cams.get(i).getX());
+            cam_view.get(i).setY(cams.get(i).getY());
+            cam_view.get(i).setFitHeight(cams.get(i).getHeight());
+            cam_view.get(i).setPreserveRatio(true);
+            backframe.getChildren().add(cam_view.get(i));
+            cam_view.get(i).toBack();
         }
 
         /*
@@ -524,7 +554,7 @@ class Gameboard {
     }
 
     private void setMenuStyle(Menu menu) {
-        menu.setOnShowing(e ->menu.setStyle("-fx-background-color: rgba(52, 152, 235, 0.5);"));
+        menu.setOnShowing(e ->menu.setStyle("-fx-background-color: rgba(52, 152, 235, 0.8);"));
         menu.setOnHiding(e->menu.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);"));
         menu.show();
         menu.hide();
