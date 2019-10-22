@@ -110,6 +110,8 @@ public class Server {
                         }
                     } catch (IOException e){
                         System.err.println("Error listening to socket from: " + sockets.get(socket).getName());
+                        sockets.remove(socket);
+                        return;
                     }
                 }
             }
