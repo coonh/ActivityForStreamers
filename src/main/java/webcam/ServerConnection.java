@@ -49,6 +49,8 @@ public class ServerConnection {
 
             writer = new PrintWriter(socket.getOutputStream());
 
+            startConnection();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
