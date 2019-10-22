@@ -119,7 +119,7 @@ public class MainCam extends Application {
         primaryStage.show();
     }
 
-    private static BufferedImage resizeImage(BufferedImage originalImage, int type){
+    public static BufferedImage resizeImage(BufferedImage originalImage, int type){
         int IMG_WIDTH = 640;
         int IMG_HEIGHT = 360;
         BufferedImage resizedImage = new BufferedImage(IMG_WIDTH, IMG_HEIGHT, type);
