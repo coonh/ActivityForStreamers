@@ -140,7 +140,7 @@ public class ServerConnection {
     public synchronized void sendImage(BufferedImage img){
         if (!isReady) return;
         try {
-            img = MainCam.resizeImage(img, img.getType());
+
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream(1000);
 
