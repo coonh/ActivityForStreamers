@@ -101,6 +101,7 @@ class Gameboard {
 
         Image img_draw = new Image(this.getClass().getResourceAsStream("/img/drawButton.png"));
         Image img_new_game = new Image(this.getClass().getResourceAsStream("/img/newGameButton.png"));
+        Image noIMG = new Image(this.getClass().getResourceAsStream("/img/noimage.png"));
 
         Image img_player_1 = new Image(this.getClass().getResourceAsStream("/img/player_1.png"));
         Image img_player_2 = new Image(this.getClass().getResourceAsStream("/img/player_2.png"));
@@ -422,7 +423,7 @@ class Gameboard {
 
         for(int i=0;i<6;i++){
             Rectangle cam = new Rectangle(3*field_size-10,2*field_size-10);
-            ImageView cview = new ImageView();
+            ImageView cview = new ImageView(noIMG);
             cam.setOnContextMenuRequested(event -> {
                 ContextMenu context = new ContextMenu();
                 for(String s : ServerConnection.getInstance().getWebcamUserList()){
