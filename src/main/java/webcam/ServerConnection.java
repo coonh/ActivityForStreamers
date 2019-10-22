@@ -1,5 +1,6 @@
 package webcam;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Task;
@@ -15,6 +16,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ServerConnection {
 
@@ -27,7 +29,7 @@ public class ServerConnection {
 
     private boolean isReady;
 
-    private HashMap<String, ObjectProperty<WritableImage>> images;
+    private HashMap<String, ObjectProperty<Image>> images;
 
     private String name;
 
@@ -114,13 +116,19 @@ public class ServerConnection {
         }
 
         Task<Void> receiveImage = new Task<Void>() {
+            final AtomicReference<WritableImage> ref = new AtomicReference<>();
             @Override
             protected Void call() throws Exception {
-                ObjectProperty<WritableImage> ref = images.get(name);
                 byte[] bytes = Base64.getDecoder().decode(object.getString("image"));
                 BufferedImage img = ImageIO.read(new ByteArrayInputStream(bytes));
                 ref.set(SwingFXUtils.toFXImage(img,ref.get()));
                 img.flush();
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        images.get(name).set(ref.get());
+                    }
+                });
                 return null;
             }
         } ;
@@ -156,7 +164,7 @@ public class ServerConnection {
         return images.keySet().toArray(new String[0]);
     }
 
-    public ObjectProperty<WritableImage> getImagePropertyWithName(String name){
+    public ObjectProperty<Image> getImagePropertyWithName(String name){
         return images.get(name);
     }
 
