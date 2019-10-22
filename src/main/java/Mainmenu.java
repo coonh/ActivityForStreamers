@@ -1,8 +1,10 @@
+import com.github.sarxos.webcam.Webcam;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -21,10 +23,12 @@ public class Mainmenu {
         Label l1 = new Label("Server-IP: ");
         Label l2 = new Label("Port: ");
         Label l3 = new Label("Streamresolution: ");
-        Label x = new Label("x");
+        Label l0 = new Label("Webcam: ");
+        Label l4 = new Label("Name: ");
 
         TextField ip_adress = new TextField("127.0.0.1");
         TextField port = new TextField("11000");
+        TextField name = new TextField();
 
         port.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -33,19 +37,32 @@ public class Mainmenu {
             }
         });
 
+        ComboBox<String> comboBox = new ComboBox<String>();
+        comboBox.getItems().addAll(
+                "848 x 480",
+                "960 x 540",
+                "1360 x 768",
+                "1280 x 720",
+                "1600 x 900",
+                "1920 x 1080"
+        );
+        comboBox.setVisibleRowCount(6);
+        comboBox.setValue("1280 x 720");
 
-        TextField w = new TextField("1280");
-        TextField h = new TextField("720");
-
+        HBox h0 = new HBox(5);
         HBox h1 = new HBox(5);
         HBox h2 = new HBox(5);
         HBox h3 = new HBox(5);
+        HBox h4 = new HBox(5);
 
-
+        h0.getChildren().addAll(l0,webcamsSelection());
         h1.getChildren().addAll(l1,ip_adress);
         h2.getChildren().addAll(l2,port);
-        h3.getChildren().addAll(l3,w,x,h);
+        h3.getChildren().addAll(l3,comboBox);
+        h4.getChildren().addAll(l4,name);
 
+        h0.setAlignment(Pos.BASELINE_RIGHT);
+        h4.setAlignment(Pos.BASELINE_RIGHT);
         h2.setAlignment(Pos.BASELINE_RIGHT);
         h1.setAlignment(Pos.BASELINE_RIGHT);
         h3.setAlignment(Pos.BASELINE_RIGHT);
@@ -55,8 +72,10 @@ public class Mainmenu {
 
         v.setAlignment(Pos.CENTER);
 
-        v.getChildren().addAll(h1,h2,h3,send);
+        v.getChildren().addAll(h4,h0,h1,h2,h3,send);
         v.setAlignment(Pos.CENTER);
+
+
 
         send.setOnAction(event -> {
 
@@ -64,8 +83,8 @@ public class Mainmenu {
             String ip = ip_adress.getText();
 
             if (!ServerConnector.getInstance().connectToServer(ip,prt)) return;
-
-            Gameboard g = new Gameboard(stage,Double.parseDouble(w.getText()),Double.parseDouble(h.getText()));
+            String [] selectedResolution = comboBox.getValue().toString().split(" x ");
+            Gameboard g = new Gameboard(stage,Double.parseDouble(selectedResolution[0]),Double.parseDouble(selectedResolution[1]));
 
             ServerConnector.getInstance().setGameboard(g);
 
@@ -76,6 +95,14 @@ public class Mainmenu {
         });
 
         scene = new Scene(v);
+    }
+
+    private ComboBox<Webcam> webcamsSelection() {
+        ComboBox<Webcam> webcamBox = new ComboBox<Webcam>();
+        for(int i=0;i<Webcam.getWebcams().size();i++){
+            webcamBox.getItems().add(Webcam.getWebcams().get(i));
+        }
+        return webcamBox;
     }
 
     public void show(Stage stage){

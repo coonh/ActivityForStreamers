@@ -110,7 +110,7 @@ public class GameController {
             timerRunning = true;
             Timer timer = new Timer();
             TimerTask task = new TimerTask() {
-                int sec = 90;
+                int sec = 60;
 
                 @Override
                 public void run() {
