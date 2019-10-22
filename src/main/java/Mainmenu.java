@@ -10,11 +10,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import webcam.WebcamHandler;
 
 
 public class Mainmenu {
     Scene scene;
     Stage stage;
+
+    private ComboBox<Webcam> webcamBox;
 
     public Mainmenu(Stage stage){
         this.stage = stage;
@@ -81,12 +84,17 @@ public class Mainmenu {
 
             int prt = Integer.parseInt(port.getText());
             String ip = ip_adress.getText();
+            String tempName = name.getText();
 
             if (!ServerConnector.getInstance().connectToServer(ip,prt)) return;
             String [] selectedResolution = comboBox.getValue().toString().split(" x ");
             Gameboard g = new Gameboard(stage,Double.parseDouble(selectedResolution[0]),Double.parseDouble(selectedResolution[1]));
 
             ServerConnector.getInstance().setGameboard(g);
+
+            webcam.ServerConnection.getInstance().connect(tempName,ip,prt+1);
+
+            WebcamHandler.getInstance().setWebcamByName(webcamBox.getSelectionModel().getSelectedItem());
 
             stage.setScene(g.scene);
             stage.centerOnScreen();
@@ -98,7 +106,7 @@ public class Mainmenu {
     }
 
     private ComboBox<Webcam> webcamsSelection() {
-        ComboBox<Webcam> webcamBox = new ComboBox<Webcam>();
+        webcamBox = new ComboBox<Webcam>();
         for(int i=0;i<Webcam.getWebcams().size();i++){
             webcamBox.getItems().add(Webcam.getWebcams().get(i));
         }

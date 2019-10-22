@@ -37,6 +37,7 @@ public class ServerConnection {
 
     private ServerConnection(){
         isReady = false;
+        images = new HashMap<>();
     }
 
     public void connect(String name, String ipAddress, int port){

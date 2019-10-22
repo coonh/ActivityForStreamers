@@ -1,8 +1,11 @@
+import com.github.sarxos.webcam.Webcam;
+import com.github.sarxos.webcam.ds.javacv.JavaCvDriver;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import server.ServerMain;
+import webcam.WebcamHandler;
 
 
 public class Main extends Application {
@@ -16,6 +19,7 @@ public class Main extends Application {
             new ServerMain();
             return;
         }
+        Webcam.setDriver(new JavaCvDriver());
         launch(args);
     }
 
@@ -30,6 +34,7 @@ public class Main extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
+        WebcamHandler.getInstance().closeWebcam();
         System.exit(0);
     }
 }

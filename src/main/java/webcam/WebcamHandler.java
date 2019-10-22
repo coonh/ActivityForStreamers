@@ -1,6 +1,7 @@
 package webcam;
 
 import com.github.sarxos.webcam.Webcam;
+import com.github.sarxos.webcam.WebcamResolution;
 import com.github.sarxos.webcam.ds.javacv.JavaCvDriver;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -16,14 +17,18 @@ public class WebcamHandler {
     private double scalefactor;
 
     private WebcamHandler(){
-        Webcam.setDriver(new JavaCvDriver());
+        //Webcam.setDriver(new JavaCvDriver());
+        scalefactor = 1;
     }
 
 
-    public void setWebcamByName(String name){
-        if (myWebcam.isOpen()) myWebcam.close();
-        myWebcam = Webcam.getWebcamByName(name);
-        myWebcam.open();
+    public void setWebcamByName(Webcam webcam){
+        System.out.println(webcam.getName());
+        if (myWebcam != null && myWebcam.isOpen()) myWebcam.close();
+
+        myWebcam = webcam;
+        myWebcam.getDevice().setResolution(WebcamResolution.NHD.getSize());
+        myWebcam.open(true);
         listenToPictures();
     }
 
@@ -35,6 +40,7 @@ public class WebcamHandler {
             @Override
             public void run() {
                 while (myWebcam.isOpen()){
+                    //System.out.println("Looking for Pictures");
                     if((img = myWebcam.getImage())!= null){
                         img = resizeImage(img,img.getType());
                         ServerConnection.getInstance().sendImage(img);
@@ -77,5 +83,9 @@ public class WebcamHandler {
             WebcamHandler.instance = new WebcamHandler();
         }
         return WebcamHandler.instance;
+    }
+
+    public void closeWebcam(){
+        if (myWebcam != null && myWebcam.isOpen()) myWebcam.close();
     }
 }
