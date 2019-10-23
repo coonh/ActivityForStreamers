@@ -78,10 +78,8 @@ public class ServerConnection {
                     socket.close();
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
-        } catch (JSONException ex){
-            ex.printStackTrace();
         }
 
     }
@@ -90,18 +88,19 @@ public class ServerConnection {
     private void startListening(){
         isReady = true;
 
-        Runnable listening = new Runnable() {
-            @Override
-            public void run() {
-                String input;
-                while (socket.isConnected()){
-                    try{
-                        if ((input = reader.readLine())!=null){
+        Runnable listening = () -> {
+            String input;
+            synchronized (reader) {
+                try {
+                    while (true) {
+
+                        if ((input = reader.readLine()) != null) {
                             receivePicture(input);
                         }
-                    } catch (IOException e){
-                        e.printStackTrace();
+
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         };
@@ -126,12 +125,7 @@ public class ServerConnection {
                 BufferedImage img = ImageIO.read(new ByteArrayInputStream(bytes));
                 ref.set(SwingFXUtils.toFXImage(img,ref.get()));
                 img.flush();
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        images.get(name).set(ref.get());
-                    }
-                });
+                Platform.runLater(() -> images.get(name).set(ref.get()));
                 return null;
             }
         } ;
@@ -142,25 +136,35 @@ public class ServerConnection {
 
     public synchronized void sendImage(BufferedImage img){
         if (!isReady) return;
-        try {
+        synchronized (writer) {
+            try {
 
 
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(1000);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream(1000);
 
-            ImageIO.write(img, "JPG", baos);
-            baos.flush();
-            String input = new String(Base64.getEncoder().encode(baos.toByteArray()), "UTF8");
+                ImageIO.write(img, "JPG", baos);
+                baos.flush();
+                String input = new String(Base64.getEncoder().encode(baos.toByteArray()), "UTF8");
 
-            JSONObject message = new JSONObject();
-            message.put("name", name);
-            message.put("image", input);
-            writer.println(message.toString());
-            writer.flush();
+                JSONObject message = new JSONObject();
+                message.put("name", name);
+                message.put("image", input);
+                writer.println(message.toString());
+                writer.flush();
 
-         } catch (IOException e){
-            e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
+    }
+
+    public void closeConnection(){
+        try {
+            this.socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String[] getWebcamUserList(){

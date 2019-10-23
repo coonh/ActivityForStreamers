@@ -27,7 +27,7 @@ public class WebcamHandler {
         if (myWebcam != null && myWebcam.isOpen()) myWebcam.close();
 
         myWebcam = webcam;
-        myWebcam.getDevice().setResolution(WebcamResolution.NHD.getSize());
+        myWebcam.getDevice().setResolution(WebcamResolution.HD.getSize());
         myWebcam.open(true);
         listenToPictures();
     }
@@ -63,14 +63,13 @@ public class WebcamHandler {
         int IMG_WIDTH = 640;
         int IMG_HEIGHT = 360;
         Graphics2D g = originalImage.createGraphics();
-        if (scalefactor!= 1){
-            g.scale(scalefactor,scalefactor);
-            g.drawImage(originalImage,0,0,originalImage.getWidth(),originalImage.getHeight(),null);
-            g.dispose();
-        }
+
         BufferedImage resizedImage = new BufferedImage(IMG_WIDTH, IMG_HEIGHT, type);
         g = resizedImage.createGraphics();
-        g.drawImage(originalImage, 0, 0, IMG_WIDTH, IMG_HEIGHT, null);
+        if (scalefactor!= 1) g.scale(scalefactor,scalefactor);
+        int x = (int) Math.round(originalImage.getWidth()*scalefactor-originalImage.getWidth())/4;
+        int y = (int) Math.round(originalImage.getHeight()*scalefactor-originalImage.getHeight())/4;
+        g.drawImage(originalImage, -x, -y, IMG_WIDTH, IMG_HEIGHT, null);
         g.dispose();
 
         return resizedImage;

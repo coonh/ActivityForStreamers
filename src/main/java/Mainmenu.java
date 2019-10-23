@@ -110,6 +110,7 @@ public class Mainmenu {
         for(int i=0;i<Webcam.getWebcams().size();i++){
             webcamBox.getItems().add(Webcam.getWebcams().get(i));
         }
+        webcamBox.getSelectionModel().select(0);
         return webcamBox;
     }
 

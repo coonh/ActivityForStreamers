@@ -19,6 +19,7 @@ import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import org.json.JSONStringer;
 import webcam.ServerConnection;
+import webcam.WebcamHandler;
 
 
 import java.lang.reflect.Array;
@@ -543,7 +544,9 @@ class Gameboard {
         Slider slid = new Slider(1,2,1);
         zoomer.setContent(slid);
         zoom.getItems().add(zoomer);
-
+        slid.valueProperty().addListener((observable, oldValue, newValue) -> {
+            WebcamHandler.getInstance().setScalefactor(newValue.doubleValue());
+        });
 
         menubar.getMenus().addAll(fullscreen,camSetting);
 
