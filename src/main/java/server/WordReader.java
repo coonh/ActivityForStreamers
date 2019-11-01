@@ -28,16 +28,16 @@ public class WordReader {
         e5 = new Stack<String>();
 
         readInStack(e3,getClass().getResource("/worddata/explain3.txt").getPath());
-        readInStack(e4,getClass().getResource("/worddata/explain3.txt").getPath());
-        readInStack(e5,getClass().getResource("/worddata/explain3.txt").getPath());
+        readInStack(e4,getClass().getResource("/worddata/explain4.txt").getPath());
+        readInStack(e5,getClass().getResource("/worddata/explain5.txt").getPath());
 
-        readInStack(d3,getClass().getResource("/worddata/explain3.txt").getPath());
-        readInStack(d4,getClass().getResource("/worddata/explain3.txt").getPath());
-        readInStack(d5,getClass().getResource("/worddata/explain3.txt").getPath());
+        readInStack(d3,getClass().getResource("/worddata/drawing3.txt").getPath());
+        readInStack(d4,getClass().getResource("/worddata/drawing4.txt").getPath());
+        readInStack(d5,getClass().getResource("/worddata/drawing5.txt").getPath());
 
-        readInStack(p3,getClass().getResource("/worddata/explain3.txt").getPath());
-        readInStack(p4,getClass().getResource("/worddata/explain3.txt").getPath());
-        readInStack(p5,getClass().getResource("/worddata/explain3.txt").getPath());
+        readInStack(p3,getClass().getResource("/worddata/pantom3.txt").getPath());
+        readInStack(p4,getClass().getResource("/worddata/pantom4.txt").getPath());
+        readInStack(p5,getClass().getResource("/worddata/pantom5.txt").getPath());
     }
 
     static WordReader getInstance(){
@@ -47,9 +47,8 @@ public class WordReader {
         return WordReader.instance;
     }
 
-    private void readInStack(Stack stack, String s) {
+    private void readInStack(Stack<String> stack, String s) {
         BufferedReader reader;
-        ArrayList<String> list = new ArrayList<String>();
         try {
             FileReader file = new FileReader(s);
             reader = new BufferedReader(file);

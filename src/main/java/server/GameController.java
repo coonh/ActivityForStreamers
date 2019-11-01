@@ -64,7 +64,10 @@ public class GameController {
             switch (input.getString("event")) {
                 case "drawCard":
                     int type = input.getInt("type");
-                    drawCard(type, sender);
+                    //draw Card for player red
+                    drawCard(type, sender,stones.get("red"));
+                    //draw card for player blue
+
                     break;
                 case "moveStone":
                     moveStone(input.getInt("position"), input.getString("color"));
@@ -152,9 +155,27 @@ public class GameController {
 
     }
 
-    private void drawCard(int type, Socket sender){
+    private void drawCard(int type, Socket sender, int playerPosition){
         String word;
-        word = WordReader.getInstance().getWord("e",type);
+        String activity;
+        int positionType = playerPosition % 3;
+        switch (positionType){
+            case 0:
+                activity = "d";
+                break;
+            case 1:
+                activity = "e";
+                break;
+            case 2:
+                activity = "p";
+                break;
+            default:
+                System.err.println("Invalid position of Player when card is drawn");
+                activity = null;
+                break;
+        }
+
+        word = WordReader.getInstance().getWord(activity,type);
 
         JSONObject answer = new JSONObject();
 
