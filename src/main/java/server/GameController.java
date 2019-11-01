@@ -19,6 +19,7 @@ public class GameController {
 
 
     public GameController() {
+        WordReader.getInstance();
         this.players = new ArrayList<>();
         stones = new HashMap<>();
 
