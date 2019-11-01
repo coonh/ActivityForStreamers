@@ -19,12 +19,13 @@ public class GameController {
 
 
     public GameController() {
-        WordReader.getInstance();
         this.players = new ArrayList<>();
         stones = new HashMap<>();
 
         timerRunning = false;
         isDrawing = false;
+
+        WordReader.getInstance();
 
         stones.put("red", 0);
         stones.put("blue", 0);
@@ -139,6 +140,8 @@ public class GameController {
 
         if (newPosition != -2) stones.replace(color,newPosition);
 
+
+
         JSONObject answer = new JSONObject();
         answer.put("event", "moveStone");
         answer.put("position", stones.get(color));
@@ -152,31 +155,14 @@ public class GameController {
 
     private void drawCard(int type, Socket sender){
         String word;
-        int value;
-        switch (type){
-            case 3:
-                System.out.println("Bin in der 3");
-                value = 3;
-                word = "Apfelkuchen";
-                break;
-            case 4:
-                value = 4;
-                word = "Käsekuchen";
-                break;
-            case 5:
-                value = 5;
-                word = "Ananas";
-                break;
-            default:
-                value = -1;
-                word = "ERROR";
-        }
+        System.out.println("HIER: ");
+        word = WordReader.getInstance().getWord("e",type);
 
         JSONObject answer = new JSONObject();
 
         answer.put("event", "recieveCard");
         answer.put("word", word);
-        answer.put("value",value);
+        answer.put("value",type);
         answer.put("isDrawing", isDrawing);
 
         sendMessage(answer.toString(),sender);

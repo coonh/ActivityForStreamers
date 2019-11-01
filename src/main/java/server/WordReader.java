@@ -17,6 +17,16 @@ public class WordReader {
     private static WordReader instance;
 
     private WordReader(){
+        d3 = new Stack<String>();
+        d4 = new Stack<String>();
+        d5 = new Stack<String>();
+        p3 = new Stack<String>();
+        p4 = new Stack<String>();
+        p5 = new Stack<String>();
+        e3 = new Stack<String>();
+        e4 = new Stack<String>();
+        e5 = new Stack<String>();
+
         readInStack(e3,getClass().getResource("/worddata/explain3.txt").getPath());
     /*  readInStack(e4,getClass().getResource("/worddata/explain4.txt").getPath());
         readInStack(e5,getClass().getResource("/worddata/explain5.txt").getPath());
@@ -39,7 +49,6 @@ public class WordReader {
     }
 
     private void readInStack(Stack stack, String s) {
-        stack = new Stack<String>();
         BufferedReader reader;
         ArrayList<String> list = new ArrayList<String>();
         try {
@@ -58,30 +67,42 @@ public class WordReader {
         }
     }
 
-    public String getWord(String cardType){
-        switch (cardType){
+    public String getWord(String cardType, int value){
+        String word = "ERR";
+        String card = cardType+value;
+        switch (card){
             case "e3":
-                return e3.pop();
+                word = e3.pop();
+                break;
             case "e4":
-                return e4.pop();
+                word =  e4.pop();
+                break;
             case "e5":
-                return e5.pop();
+                word =  e5.pop();
+                break;
             case "d3":
-                return d3.pop();
+                word =  d3.pop();
+                break;
             case "d4":
-                return d4.pop();
+                word =  d4.pop();
+                break;
             case "d5":
-                return d5.pop();
+                word =  d5.pop();
+                break;
             case "p3":
-                return p3.pop();
+                word =  p3.pop();
+                break;
             case "p4":
-                return p4.pop();
+                word =  p4.pop();
+                break;
             case "p5":
-                return p5.pop();
+                word =  p5.pop();
+                break;
             default:
                 System.err.println("Card Value needs to be a combination of e, p, d and a value 3, 4, 5");
-                return null;
+                break;
         }
+        return word;
     }
 
 

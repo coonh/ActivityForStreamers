@@ -22,6 +22,7 @@ import webcam.ServerConnection;
 import webcam.WebcamHandler;
 
 
+
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -35,6 +36,8 @@ class Gameboard {
     double window_width;
     double window_height;
     double field_size;
+
+
 
     private DrawingWindow d;
 
@@ -72,8 +75,6 @@ class Gameboard {
         Pane backframe= new Pane();
         backframe.setMinWidth(window_width);
         backframe.setMinHeight(window_height);
-
-
 
 
         active_card_value = 3;

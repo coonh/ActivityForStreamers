@@ -42,7 +42,10 @@ public class Popup_card extends HBox {
         check.setPreserveRatio(true);
         cross.setPreserveRatio(true);
 
+
+
         Text term = new Text(word);
+
         term.setFont(new Font("Berlin Sans FB",20));
 
         Rectangle bound = new Rectangle(3*size, size);
@@ -70,6 +73,8 @@ public class Popup_card extends HBox {
         StackPane stack = new StackPane();
 
         stack.getChildren().addAll(bound,term);
+
+        System.out.println("WORT: "+ term.getText());
 
         this.getChildren().addAll(cross,stack,check);
 
