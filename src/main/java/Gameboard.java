@@ -671,8 +671,11 @@ class Gameboard {
 
     public void timerUpdate(int sec) {
         if (sec<=10 && sec > 0){
+            beep1.setVolume(0.2);
             beep1.play();
-        }else if(sec==0) beep2.play();
+        }else if(sec==0){
+            beep2.play();
+        }
         stopwatch.setImage(img_stopwatch_anim);
 
         if(sec==0){

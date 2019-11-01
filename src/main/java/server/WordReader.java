@@ -28,17 +28,16 @@ public class WordReader {
         e5 = new Stack<String>();
 
         readInStack(e3,getClass().getResource("/worddata/explain3.txt").getPath());
-    /*  readInStack(e4,getClass().getResource("/worddata/explain4.txt").getPath());
-        readInStack(e5,getClass().getResource("/worddata/explain5.txt").getPath());
+        readInStack(e4,getClass().getResource("/worddata/explain3.txt").getPath());
+        readInStack(e5,getClass().getResource("/worddata/explain3.txt").getPath());
 
-        readInStack(d3,getClass().getResource("/worddata/drawing3.txt").getPath());
-        readInStack(d4,getClass().getResource("/worddata/drawing4.txt").getPath());
-        readInStack(d5,getClass().getResource("/worddata/drawing5.txt").getPath());
+        readInStack(d3,getClass().getResource("/worddata/explain3.txt").getPath());
+        readInStack(d4,getClass().getResource("/worddata/explain3.txt").getPath());
+        readInStack(d5,getClass().getResource("/worddata/explain3.txt").getPath());
 
-        readInStack(p3,getClass().getResource("/worddata/pantom3.txt").getPath());
-        readInStack(p4,getClass().getResource("/worddata/pantom4.txt").getPath());
-        readInStack(p5,getClass().getResource("/worddata/pantom5.txt").getPath());
-    */
+        readInStack(p3,getClass().getResource("/worddata/explain3.txt").getPath());
+        readInStack(p4,getClass().getResource("/worddata/explain3.txt").getPath());
+        readInStack(p5,getClass().getResource("/worddata/explain3.txt").getPath());
     }
 
     static WordReader getInstance(){
@@ -70,37 +69,41 @@ public class WordReader {
     public String getWord(String cardType, int value){
         String word = "ERR";
         String card = cardType+value;
-        switch (card){
-            case "e3":
-                word = e3.pop();
-                break;
-            case "e4":
-                word =  e4.pop();
-                break;
-            case "e5":
-                word =  e5.pop();
-                break;
-            case "d3":
-                word =  d3.pop();
-                break;
-            case "d4":
-                word =  d4.pop();
-                break;
-            case "d5":
-                word =  d5.pop();
-                break;
-            case "p3":
-                word =  p3.pop();
-                break;
-            case "p4":
-                word =  p4.pop();
-                break;
-            case "p5":
-                word =  p5.pop();
-                break;
-            default:
-                System.err.println("Card Value needs to be a combination of e, p, d and a value 3, 4, 5");
-                break;
+        try {
+            switch (card) {
+                case "e3":
+                    word = e3.pop();
+                    break;
+                case "e4":
+                    word = e4.pop();
+                    break;
+                case "e5":
+                    word = e5.pop();
+                    break;
+                case "d3":
+                    word = d3.pop();
+                    break;
+                case "d4":
+                    word = d4.pop();
+                    break;
+                case "d5":
+                    word = d5.pop();
+                    break;
+                case "p3":
+                    word = p3.pop();
+                    break;
+                case "p4":
+                    word = p4.pop();
+                    break;
+                case "p5":
+                    word = p5.pop();
+                    break;
+                default:
+                    System.err.println("Card Value needs to be a combination of e, p, d and a value 3, 4, 5");
+                    break;
+            }
+        }catch (EmptyStackException e){
+            return "Keine Wörter mehr";
         }
         return word;
     }

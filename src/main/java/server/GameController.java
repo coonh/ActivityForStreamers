@@ -46,7 +46,7 @@ public class GameController {
             JSONObject toSend = new JSONObject(message);
             writer.println(toSend.toString());
             writer.flush();
-            System.out.println("Sended message: " + toSend.toString() + " TO " + reciever.getInetAddress().toString());
+            System.out.println("Sent message: " + toSend.toString() + " TO " + reciever.getInetAddress().toString());
 
         } catch (JSONException e){
 
@@ -94,7 +94,6 @@ public class GameController {
             w.add(i);
         }
         Collections.shuffle(w);
-        System.out.println("Array: "+ w.get(0));
         JSONObject answer = new JSONObject();
         answer.put("event","newTeams");
         answer.put("value1",w.get(0));
@@ -155,7 +154,6 @@ public class GameController {
 
     private void drawCard(int type, Socket sender){
         String word;
-        System.out.println("HIER: ");
         word = WordReader.getInstance().getWord("e",type);
 
         JSONObject answer = new JSONObject();
