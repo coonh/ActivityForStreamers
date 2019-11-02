@@ -4,28 +4,29 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EmptyStackException;
-import java.util.Stack;
+import java.util.*;
 
 public class WordReader {
 
-    private Stack<String> d3,d4,d5,p3,p4,p5,e3,e4,e5;
+    private WordStack<String> d3,d4,d5,p3,p4,p5,e3,e4,e5;
+
+    private List<WordStack<String>> allStacks;
 
 
     private static WordReader instance;
 
     private WordReader(){
-        d3 = new Stack<String>();
-        d4 = new Stack<String>();
-        d5 = new Stack<String>();
-        p3 = new Stack<String>();
-        p4 = new Stack<String>();
-        p5 = new Stack<String>();
-        e3 = new Stack<String>();
-        e4 = new Stack<String>();
-        e5 = new Stack<String>();
+        d3 = new WordStack<>("/worddata/explain3.txt");
+        d4 = new WordStack<>("/worddata/explain4.txt");
+        d5 = new WordStack<>("/worddata/explain5.txt");
+        p3 = new WordStack<>("/worddata/drawing3.txt");
+        p4 = new WordStack<>("/worddata/drawing4.txt");
+        p5 = new WordStack<>("/worddata/drawing5.txt");
+        e3 = new WordStack<>("/worddata/pantom3.txt");
+        e4 = new WordStack<>("/worddata/pantom4.txt");
+        e5 = new WordStack<>("/worddata/pantom5.txt");
+
+        allStacks.addAll(Arrays.asList(d3,d4,d5,p3,p4,p5,e3,e4,e5));
 
         readInStack(e3,getClass().getResource("/worddata/explain3.txt").getPath());
         readInStack(e4,getClass().getResource("/worddata/explain4.txt").getPath());
@@ -118,6 +119,8 @@ public class WordReader {
                     System.err.println("Card Value needs to be a combination of e, p, d and a value 3, 4, 5");
                     break;
             }
+
+            allStacks.forEach(stack -> {if (stack.empty()) readInStack(stack,stack.getFilePath()); });
         }catch (EmptyStackException e){
             return "Keine Wörter mehr";
         }
@@ -127,5 +130,19 @@ public class WordReader {
 
     public void reset() {
         WordReader.instance = new WordReader();
+    }
+
+
+    private class WordStack<T> extends Stack<T>{
+        String filePath;
+
+        public WordStack(String filePath) {
+            super();
+            this.filePath = getClass().getResource(filePath).getPath();
+        }
+
+        public String getFilePath() {
+            return filePath;
+        }
     }
 }
