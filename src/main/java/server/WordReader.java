@@ -120,7 +120,7 @@ public class WordReader {
                     break;
             }
 
-            allStacks.forEach(stack -> {if (stack.empty()) readInStack(stack,stack.getFilePath()); });
+            allStacks.forEach(stack -> {if (stack.empty()) {readInStack(stack,stack.getFilePath()); Collections.shuffle(stack); }});
         }catch (EmptyStackException e){
             return "Keine Wörter mehr";
         }
