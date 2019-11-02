@@ -255,6 +255,7 @@ class Gameboard {
         newGame.setTranslateY(9*field_size/2);
         newGame.setOnMouseClicked(event -> {
             generateTeams();
+            ServerConnector.getInstance().newGame();
         });
         stack.getChildren().add(newGame);
 
@@ -624,14 +625,14 @@ class Gameboard {
         stage.show();
     }
 
-    void drawCard(String word,int value) {
+    void drawCard(String wordRed, String wordBlue,int value) {
         Platform.runLater(()-> {
             if(!drawMode) {
                 counter = 0;
                 counter_txt.setText("0");
 
                 active_card_value = value;
-                popup = new Popup_card(word, field_size + 10,this,value);
+                popup = new Popup_card(wordRed, wordBlue, field_size + 10,this,value);
                 popup.setTranslateX(rects.get(21).getBoundsInLocal().getMinX() - popup.getBoundsInParent().getWidth() / 2);
                 popup.setTranslateY(rects.get(21).getBoundsInLocal().getMinY() - 8);
                 stack.getChildren().add(popup);
@@ -643,7 +644,7 @@ class Gameboard {
             }else{
                 active_card_value = value;
                 stack.getChildren().remove(popup);
-                popup = new Popup_card(word, field_size + 10,this,value);
+                popup = new Popup_card(wordRed, wordBlue, field_size + 10,this,value);
                 popup.setTranslateX(rects.get(21).getBoundsInLocal().getMinX() - popup.getBoundsInParent().getWidth() / 2);
 
                 if(d!=null) setPopupToFront();
@@ -694,6 +695,7 @@ class Gameboard {
     }
     private void generateTeams(){
         ServerConnector.getInstance().pickTeams();
+
 
         String message =  new JSONStringer().object()
                 .key("event").value("moveStone")

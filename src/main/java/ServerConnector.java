@@ -60,7 +60,7 @@ class ServerConnector {
                                 break;
                             case "recieveCard":
                                 if(input.getBoolean("isDrawing"))gameboard.getDrawingWindow().clear();
-                                gameboard.drawCard(input.getString("word"), input.getInt("value"));
+                                gameboard.drawCard(input.getString("wordRed"),input.getString("wordBlue"), input.getInt("value"));
 
                                 break;
                             case "DrawingWindow":
@@ -246,5 +246,13 @@ class ServerConnector {
 
         sendMessage(answer.toString());
 
+    }
+
+    public void newGame() {
+        JSONObject answer = new JSONObject();
+
+        answer.put("event","reset");
+
+        sendMessage(answer.toString());
     }
 }

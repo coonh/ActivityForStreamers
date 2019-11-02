@@ -65,9 +65,26 @@ public class WordReader {
         }
     }
 
-    public String getWord(String cardType, int value){
+    public String getWord(int playerpos, int value){
+        String activity;
+        int positionType = playerpos % 3;
+        switch (positionType){
+            case 0:
+                activity = "d";
+                break;
+            case 1:
+                activity = "e";
+                break;
+            case 2:
+                activity = "p";
+                break;
+            default:
+                System.err.println("Invalid position of Player when card is drawn");
+                activity = null;
+                break;
+        }
         String word = "ERR";
-        String card = cardType+value;
+        String card = activity+value;
         try {
             switch (card) {
                 case "e3":
@@ -108,4 +125,7 @@ public class WordReader {
     }
 
 
+    public void reset() {
+        WordReader.instance = new WordReader();
+    }
 }
