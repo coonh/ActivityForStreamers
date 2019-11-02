@@ -10,23 +10,23 @@ public class WordReader {
 
     private WordStack<String> d3,d4,d5,p3,p4,p5,e3,e4,e5;
 
-    private List<WordStack<String>> allStacks;
+    private ArrayList<WordStack<String>> allStacks;
 
 
     private static WordReader instance;
 
     private WordReader(){
-        d3 = new WordStack<>("/worddata/explain3.txt");
-        d4 = new WordStack<>("/worddata/explain4.txt");
-        d5 = new WordStack<>("/worddata/explain5.txt");
-        p3 = new WordStack<>("/worddata/drawing3.txt");
-        p4 = new WordStack<>("/worddata/drawing4.txt");
-        p5 = new WordStack<>("/worddata/drawing5.txt");
-        e3 = new WordStack<>("/worddata/pantom3.txt");
-        e4 = new WordStack<>("/worddata/pantom4.txt");
-        e5 = new WordStack<>("/worddata/pantom5.txt");
+        e3 = new WordStack<>("/worddata/explain3.txt");
+        e4 = new WordStack<>("/worddata/explain4.txt");
+        e5 = new WordStack<>("/worddata/explain5.txt");
+        d3 = new WordStack<>("/worddata/drawing3.txt");
+        d4 = new WordStack<>("/worddata/drawing4.txt");
+        d5 = new WordStack<>("/worddata/drawing5.txt");
+        p3 = new WordStack<>("/worddata/pantom3.txt");
+        p4 = new WordStack<>("/worddata/pantom4.txt");
+        p5 = new WordStack<>("/worddata/pantom5.txt");
 
-        allStacks.addAll(Arrays.asList(d3,d4,d5,p3,p4,p5,e3,e4,e5));
+        allStacks = new ArrayList<>(Arrays.asList(d3,d4,d5,p3,p4,p5,e3,e4,e5));
 
         readInStack(e3,getClass().getResource("/worddata/explain3.txt").getPath());
         readInStack(e4,getClass().getResource("/worddata/explain4.txt").getPath());

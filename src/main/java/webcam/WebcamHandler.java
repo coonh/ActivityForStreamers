@@ -64,6 +64,8 @@ public class WebcamHandler {
         int IMG_HEIGHT = 360;
         Graphics2D g = originalImage.createGraphics();
 
+
+        if (type == 0) type = BufferedImage.TYPE_INT_RGB;
         BufferedImage resizedImage = new BufferedImage(IMG_WIDTH, IMG_HEIGHT, type);
         g = resizedImage.createGraphics();
         if (scalefactor!= 1) g.scale(scalefactor,scalefactor);
