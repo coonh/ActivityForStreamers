@@ -255,7 +255,6 @@ class Gameboard {
         newGame.setTranslateY(9*field_size/2);
         newGame.setOnMouseClicked(event -> {
             generateTeams();
-            ServerConnector.getInstance().newGame();
         });
         stack.getChildren().add(newGame);
 
@@ -550,8 +549,14 @@ class Gameboard {
         slid.valueProperty().addListener((observable, oldValue, newValue) -> {
             WebcamHandler.getInstance().setScalefactor(newValue.doubleValue());
         });
+        //Menu 3
+        Menu resetWords = new Menu("Begriffe");
+        MenuItem resetTheWords = new MenuItem("Begriffe zuruecksetzen");
 
-        menubar.getMenus().addAll(fullscreen,camSetting);
+        resetWords.getItems().addAll(resetTheWords);
+        resetTheWords.setOnAction(event -> ServerConnector.getInstance().newGame());
+
+        menubar.getMenus().addAll(fullscreen,camSetting,resetWords);
 
         for(Menu m : menubar.getMenus()){
             setMenuStyle(m);
