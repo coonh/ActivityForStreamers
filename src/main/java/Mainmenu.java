@@ -1,4 +1,5 @@
 import com.github.sarxos.webcam.Webcam;
+import com.github.sarxos.webcam.WebcamDevice;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
@@ -17,7 +18,7 @@ public class Mainmenu {
     Scene scene;
     Stage stage;
 
-    private ComboBox<Webcam> webcamBox;
+    private ComboBox<String> webcamBox;
 
     public Mainmenu(Stage stage){
         this.stage = stage;
@@ -94,7 +95,7 @@ public class Mainmenu {
 
             webcam.ServerConnection.getInstance().connect(tempName,ip,prt+1);
 
-            WebcamHandler.getInstance().setWebcamByName(webcamBox.getSelectionModel().getSelectedItem());
+            if (webcamBox.getSelectionModel().getSelectedItem()!="Keine Kamera") WebcamHandler.getInstance().setWebcamByName(webcamBox.getSelectionModel().getSelectedItem());
 
             stage.setScene(g.scene);
             stage.centerOnScreen();
@@ -105,11 +106,12 @@ public class Mainmenu {
         scene = new Scene(v);
     }
 
-    private ComboBox<Webcam> webcamsSelection() {
-        webcamBox = new ComboBox<Webcam>();
+    private ComboBox<String> webcamsSelection() {
+        webcamBox = new ComboBox<String>();
         for(int i=0;i<Webcam.getWebcams().size();i++){
-            webcamBox.getItems().add(Webcam.getWebcams().get(i));
+            webcamBox.getItems().add(Webcam.getWebcams().get(i).getName());
         }
+        webcamBox.getItems().add("Keine Kamera");
         webcamBox.getSelectionModel().select(0);
         return webcamBox;
     }

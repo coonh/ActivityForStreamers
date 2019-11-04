@@ -22,11 +22,11 @@ public class WebcamHandler {
     }
 
 
-    public void setWebcamByName(Webcam webcam){
-        System.out.println(webcam.getName());
+    public void setWebcamByName(String webcam){
+        System.out.println(webcam);
         if (myWebcam != null && myWebcam.isOpen()) myWebcam.close();
 
-        myWebcam = webcam;
+        myWebcam = Webcam.getWebcamByName(webcam);
         myWebcam.getDevice().setResolution(WebcamResolution.HD.getSize());
         myWebcam.open(true);
         listenToPictures();
