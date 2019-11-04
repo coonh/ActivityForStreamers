@@ -100,22 +100,22 @@ public class Server {
             @Override
             public void run() {
                 //BufferedImage img;
-                Thread th;
                 while (!socket.isClosed()){
                     try{
-                        BufferedImage img;
-                        if ((img = ImageIO.read(inputStream))!= null) {
+                        Object img;
+                        if ((img = inputStream.readObject())!= null) {
                             System.out.println("New Image");
                             for (Map.Entry<Socket, ClientData> e : sockets.entrySet()) {
                                 //if (e.getKey().equals(socket)) continue;
 
-                                e.getValue().getOutputStream().writeObject(new ImageData(img, e.getValue().getName()));
+                                e.getValue().getOutputStream().writeObject(img);
                                 e.getValue().getOutputStream().flush();
+                                e.getValue().getOutputStream().reset();
 
                             }
                         }
                     } catch (Exception e){
-                        e.printStackTrace();
+                        //e.printStackTrace();
                         System.err.println("Error listening to socket from: " + sockets.get(socket).getName());
                         sockets.remove(socket,sockets.get(socket));
                         return;

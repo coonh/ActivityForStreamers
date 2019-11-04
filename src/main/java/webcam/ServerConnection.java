@@ -36,11 +36,14 @@ public class ServerConnection {
 
     private String name;
 
+    private int count;
+
 
 
     private ServerConnection(){
         isReady = false;
         images = new HashMap<>();
+        count = 0;
     }
 
     public void connect(String name, String ipAddress, int port){
@@ -95,19 +98,19 @@ public class ServerConnection {
         isReady = true;
 
         Runnable listening = () -> {
-            Object input;
+            ImageData input;
             synchronized (inputStream) {
                 try {
                     while (true) {
 
-                        if ((input = inputStream.readObject()) != null) {
-                            ImageData imageData = (ImageData) input;
-                            receivePicture(imageData);
+                        if ((input = (ImageData) inputStream.readObject()) != null) {
+                            receivePicture(input);
 
 
                         }
 
                     }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -141,31 +144,21 @@ public class ServerConnection {
 
     public synchronized void sendImage(BufferedImage img){
         if (!isReady) return;
-        synchronized (outputStream) {
+        //synchronized (outputStream) {
             try {
 
 
-                //outputStream.writeObject(img);
-                System.out.println("Send new Image");
-                ImageIO.write(img,"png",outputStream);
+                ImageData imageData = new ImageData(img, name);
+
+                outputStream.writeObject(imageData);
+                outputStream.reset();
                 outputStream.flush();
-                /*ByteArrayOutputStream baos = new ByteArrayOutputStream(1000);
-
-                ImageIO.write(img, "JPG", baos);
-                baos.flush();
-                String input = new String(Base64.getEncoder().encode(baos.toByteArray()), "UTF8");
-
-                JSONObject message = new JSONObject();
-                message.put("name", name);
-                message.put("image", input);
-                writer.println(message.toString());
-                writer.flush();*/
-
-
-            } catch (IOException e) {
+                imageData = null;
+                img.flush();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+        //}
 
     }
 
@@ -176,7 +169,7 @@ public class ServerConnection {
         final AtomicReference<WritableImage> ref = new AtomicReference<>();
         ref.set(SwingFXUtils.toFXImage(img,ref.get()));
         Platform.runLater(() -> images.get("myself").set(ref.get()));
-
+        img.flush();
     }
 
     public void closeConnection(){

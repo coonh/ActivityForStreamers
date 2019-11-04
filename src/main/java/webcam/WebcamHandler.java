@@ -7,6 +7,11 @@ import javafx.scene.canvas.GraphicsContext;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class WebcamHandler {
 
@@ -38,18 +43,21 @@ public class WebcamHandler {
         Runnable runnable = new Runnable() {
             BufferedImage img;
             Thread th;
+            ExecutorService executorService = Executors.newFixedThreadPool(2);
             @Override
             public void run() {
                 while (myWebcam.isOpen()){
                     //System.out.println("Looking for Pictures");
                     if((img = myWebcam.getImage())!= null){
                         img = resizeImage(img,img.getType());
-                        ServerConnection.getInstance().updateOwnImage(img);
-                        th = new Thread(()-> {
-                            ServerConnection.getInstance().sendImage(img);
-                        });
-                        th.setDaemon(true);
-                        th.start();
+                        Callable<Void> c1 = (Callable<Void>) () -> {ServerConnection.getInstance().updateOwnImage(img); return null;};
+                        Callable<Void> c2 = (Callable<Void>) () -> {ServerConnection.getInstance().sendImage(img); return null;};
+                        try {
+                            executorService.invokeAll(Arrays.asList(c1,c2));
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        img.flush();
                     }
                 }
             }
