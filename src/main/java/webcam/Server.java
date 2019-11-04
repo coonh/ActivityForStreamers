@@ -1,12 +1,12 @@
 package webcam;
 
+import org.bytedeco.javacv.FrameFilter;
 import org.json.JSONObject;
 import server.ServerMain;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -82,8 +82,11 @@ public class Server {
             writer.println(jsonObject.toString());
             writer.flush();
 
-            sockets.put(socket,new ClientData(name,reader,writer));
-            startListening(socket, reader,writer);
+            ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+
+            sockets.put(socket,new ClientData(name,reader,writer,input,output));
+            startListening(socket,input);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -92,22 +95,27 @@ public class Server {
 
     }
 
-    private void startListening(Socket socket, BufferedReader reader, PrintWriter writer){
+    private void startListening(Socket socket,ObjectInputStream inputStream){
         Runnable listening = new Runnable() {
             @Override
             public void run() {
-                String input;
+                //BufferedImage img;
+                Thread th;
                 while (!socket.isClosed()){
                     try{
-                        if ((input = reader.readLine())!= null) {
-                            for (Map.Entry<Socket, ClientData> e: sockets.entrySet()) {
-                                if (e.getKey().equals(socket)) continue;
+                        BufferedImage img;
+                        if ((img = ImageIO.read(inputStream))!= null) {
+                            System.out.println("New Image");
+                            for (Map.Entry<Socket, ClientData> e : sockets.entrySet()) {
+                                //if (e.getKey().equals(socket)) continue;
 
-                                e.getValue().getWriter().println(input);
-                                e.getValue().getWriter().flush();
+                                e.getValue().getOutputStream().writeObject(new ImageData(img, e.getValue().getName()));
+                                e.getValue().getOutputStream().flush();
+
                             }
                         }
-                    } catch (IOException e){
+                    } catch (Exception e){
+                        e.printStackTrace();
                         System.err.println("Error listening to socket from: " + sockets.get(socket).getName());
                         sockets.remove(socket,sockets.get(socket));
                         return;
@@ -122,4 +130,6 @@ public class Server {
         thread.setDaemon(true);
         thread.start();
     }
+
+
 }

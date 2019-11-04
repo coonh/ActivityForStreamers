@@ -27,6 +27,9 @@ public class ServerConnection {
     private BufferedReader reader;
     private PrintWriter writer;
 
+    private ObjectOutputStream outputStream;
+    private ObjectInputStream inputStream;
+
     private boolean isReady;
 
     private HashMap<String, ObjectProperty<Image>> images;
@@ -73,7 +76,10 @@ public class ServerConnection {
             if ((answer = reader.readLine())!= null){
                 jsonObject = new JSONObject(answer);
                 if (jsonObject.getString("status").equals("ok")){
+                    outputStream = new ObjectOutputStream(socket.getOutputStream());
+                    inputStream = new ObjectInputStream(socket.getInputStream());
                     startListening();
+
                 } else {
                     socket.close();
                 }
@@ -89,17 +95,20 @@ public class ServerConnection {
         isReady = true;
 
         Runnable listening = () -> {
-            String input;
-            synchronized (reader) {
+            Object input;
+            synchronized (inputStream) {
                 try {
                     while (true) {
 
-                        if ((input = reader.readLine()) != null) {
-                            receivePicture(input);
+                        if ((input = inputStream.readObject()) != null) {
+                            ImageData imageData = (ImageData) input;
+                            receivePicture(imageData);
+
+
                         }
 
                     }
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -109,10 +118,8 @@ public class ServerConnection {
         listener.start();
     }
 
-    private void receivePicture(String input){
-        JSONObject object = new JSONObject(input);
-
-        String name = object.getString("name");
+    private void receivePicture(ImageData input){
+        String name = input.getName();
         if (!images.containsKey(name)){
             images.put(name,new SimpleObjectProperty<>());
         }
@@ -121,10 +128,8 @@ public class ServerConnection {
             final AtomicReference<WritableImage> ref = new AtomicReference<>();
             @Override
             protected Void call() throws Exception {
-                byte[] bytes = Base64.getDecoder().decode(object.getString("image"));
-                BufferedImage img = ImageIO.read(new ByteArrayInputStream(bytes));
-                ref.set(SwingFXUtils.toFXImage(img,ref.get()));
-                img.flush();
+                ref.set(SwingFXUtils.toFXImage(input.getMyImg(),ref.get()));
+                input.getMyImg().flush();
                 Platform.runLater(() -> images.get(name).set(ref.get()));
                 return null;
             }
@@ -136,11 +141,15 @@ public class ServerConnection {
 
     public synchronized void sendImage(BufferedImage img){
         if (!isReady) return;
-        synchronized (writer) {
+        synchronized (outputStream) {
             try {
 
 
-                ByteArrayOutputStream baos = new ByteArrayOutputStream(1000);
+                //outputStream.writeObject(img);
+                System.out.println("Send new Image");
+                ImageIO.write(img,"png",outputStream);
+                outputStream.flush();
+                /*ByteArrayOutputStream baos = new ByteArrayOutputStream(1000);
 
                 ImageIO.write(img, "JPG", baos);
                 baos.flush();
@@ -150,7 +159,8 @@ public class ServerConnection {
                 message.put("name", name);
                 message.put("image", input);
                 writer.println(message.toString());
-                writer.flush();
+                writer.flush();*/
+
 
             } catch (IOException e) {
                 e.printStackTrace();

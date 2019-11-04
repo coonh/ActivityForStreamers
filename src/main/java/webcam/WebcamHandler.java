@@ -37,6 +37,7 @@ public class WebcamHandler {
 
         Runnable runnable = new Runnable() {
             BufferedImage img;
+            Thread th;
             @Override
             public void run() {
                 while (myWebcam.isOpen()){
@@ -44,9 +45,11 @@ public class WebcamHandler {
                     if((img = myWebcam.getImage())!= null){
                         img = resizeImage(img,img.getType());
                         ServerConnection.getInstance().updateOwnImage(img);
-                        new Thread(()-> {
+                        th = new Thread(()-> {
                             ServerConnection.getInstance().sendImage(img);
-                        }).start();
+                        });
+                        th.setDaemon(true);
+                        th.start();
                     }
                 }
             }
