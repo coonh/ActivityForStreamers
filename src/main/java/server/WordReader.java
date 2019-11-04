@@ -28,17 +28,7 @@ public class WordReader {
 
         allStacks = new ArrayList<>(Arrays.asList(d3,d4,d5,p3,p4,p5,e3,e4,e5));
 
-        readInStack(e3,getClass().getResource("/worddata/explain3.txt").getPath());
-        readInStack(e4,getClass().getResource("/worddata/explain4.txt").getPath());
-        readInStack(e5,getClass().getResource("/worddata/explain5.txt").getPath());
-
-        readInStack(d3,getClass().getResource("/worddata/drawing3.txt").getPath());
-        readInStack(d4,getClass().getResource("/worddata/drawing4.txt").getPath());
-        readInStack(d5,getClass().getResource("/worddata/drawing5.txt").getPath());
-
-        readInStack(p3,getClass().getResource("/worddata/pantom3.txt").getPath());
-        readInStack(p4,getClass().getResource("/worddata/pantom4.txt").getPath());
-        readInStack(p5,getClass().getResource("/worddata/pantom5.txt").getPath());
+        allStacks.forEach(stack -> readInStack(stack,stack.getFilePath()));
     }
 
     static WordReader getInstance(){
@@ -120,7 +110,6 @@ public class WordReader {
                     break;
             }
 
-            //allStacks.forEach(stack -> {if (stack.empty()) {readInStack(stack,stack.getFilePath()); Collections.shuffle(stack); }});
         }catch (EmptyStackException e){
             return "Keine Wörter mehr";
         }
