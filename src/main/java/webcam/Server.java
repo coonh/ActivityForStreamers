@@ -1,6 +1,5 @@
 package webcam;
 
-import org.bytedeco.javacv.FrameFilter;
 import org.json.JSONObject;
 import server.ServerMain;
 

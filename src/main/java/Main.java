@@ -1,3 +1,5 @@
+import com.github.sarxos.webcam.Webcam;
+import com.github.sarxos.webcam.ds.javacv.JavaCvDriver;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -22,6 +24,7 @@ public class Main extends Application {
             new ServerMain();
             return;
         }
+        //Webcam.setDriver(new JavaCvDriver());
         launch(args);
     }
 

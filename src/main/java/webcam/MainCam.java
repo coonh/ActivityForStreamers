@@ -2,7 +2,6 @@ package webcam;
 
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamResolution;
-import com.github.sarxos.webcam.ds.javacv.JavaCvDriver;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -39,7 +38,6 @@ public class MainCam extends Application {
     public void start(Stage primaryStage) throws Exception {
         showImage = new ImageView();
 
-        Webcam.setDriver(new JavaCvDriver());
 
 
 
@@ -122,6 +120,7 @@ public class MainCam extends Application {
     public static BufferedImage resizeImage(BufferedImage originalImage, int type){
         int IMG_WIDTH = 640;
         int IMG_HEIGHT = 360;
+        type = BufferedImage.TYPE_3BYTE_BGR;
         BufferedImage resizedImage = new BufferedImage(IMG_WIDTH, IMG_HEIGHT, type);
         Graphics2D g = resizedImage.createGraphics();
         g.drawImage(originalImage, 0, 0, IMG_WIDTH, IMG_HEIGHT, null);

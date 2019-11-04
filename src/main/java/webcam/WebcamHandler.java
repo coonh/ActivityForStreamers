@@ -1,9 +1,6 @@
 package webcam;
 
-import com.github.sarxos.webcam.Webcam;
-import com.github.sarxos.webcam.WebcamResolution;
-import com.github.sarxos.webcam.ds.javacv.JavaCvDriver;
-import javafx.scene.canvas.GraphicsContext;
+import com.github.sarxos.webcam.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -35,6 +32,7 @@ public class WebcamHandler {
         myWebcam.getDevice().setResolution(WebcamResolution.HD.getSize());
         myWebcam.open(true);
         listenToPictures();
+
     }
 
 
@@ -49,7 +47,7 @@ public class WebcamHandler {
                 while (myWebcam.isOpen()){
                     //System.out.println("Looking for Pictures");
                     if((img = myWebcam.getImage())!= null){
-                        img = resizeImage(img,img.getType());
+                        img = MainCam.resizeImage(img,img.getType());
                         Callable<Void> c1 = (Callable<Void>) () -> {ServerConnection.getInstance().updateOwnImage(img); return null;};
                         Callable<Void> c2 = (Callable<Void>) () -> {ServerConnection.getInstance().sendImage(img); return null;};
                         try {

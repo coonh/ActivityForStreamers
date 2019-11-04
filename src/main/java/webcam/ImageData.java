@@ -1,5 +1,7 @@
 package webcam;
 
+import org.bytedeco.javacv.FrameFilter;
+
 import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -72,7 +74,9 @@ public class ImageData implements Serializable {
         }
         finally {
             if (stream != null){
-                stream.close();
+                try {
+                    stream.close();
+                } catch (Exception e){ }
             }
         }
     }
@@ -100,7 +104,9 @@ public class ImageData implements Serializable {
         }
         finally {
             if (stream != null){
-                stream.close();
+                try {
+                    stream.close();
+                } catch (Exception e){ }
             }
         }
     }
