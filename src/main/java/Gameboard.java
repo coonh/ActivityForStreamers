@@ -21,9 +21,6 @@ import org.json.JSONStringer;
 import webcam.ServerConnection;
 import webcam.WebcamHandler;
 
-
-
-import java.lang.reflect.Array;
 import java.util.*;
 
 
@@ -432,10 +429,16 @@ class Gameboard {
                     MenuItem m = new MenuItem(s);
                     //TODO HANDLE WHAT HAPPENS WHEN U CLICK ON CAMERA
                     m.setOnAction(event1 -> {
+                        cam.setFill(Color.rgb(0,0,0,0));
                         cview.imageProperty().bind(ServerConnection.getInstance().getImagePropertyWithName(m.getText()));
                     });
                     context.getItems().add(m);
                 }
+                MenuItem green = new MenuItem("Greenscreen");
+                green.setOnAction(event1 -> {
+                    cam.setFill(Color.rgb(0,255,0));
+                });
+                context.getItems().add(green);
                     context.show(cview,event.getScreenX(),event.getScreenY());
             });
 
