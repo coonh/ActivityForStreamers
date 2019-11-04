@@ -159,6 +159,16 @@ public class ServerConnection {
 
     }
 
+    public void updateOwnImage(BufferedImage img){
+        if (!images.containsKey("myself")){
+            images.put("myself",new SimpleObjectProperty<>());
+        }
+        final AtomicReference<WritableImage> ref = new AtomicReference<>();
+        ref.set(SwingFXUtils.toFXImage(img,ref.get()));
+        Platform.runLater(() -> images.get("myself").set(ref.get()));
+
+    }
+
     public void closeConnection(){
         try {
             this.socket.close();

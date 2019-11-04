@@ -43,7 +43,10 @@ public class WebcamHandler {
                     //System.out.println("Looking for Pictures");
                     if((img = myWebcam.getImage())!= null){
                         img = resizeImage(img,img.getType());
-                        ServerConnection.getInstance().sendImage(img);
+                        ServerConnection.getInstance().updateOwnImage(img);
+                        new Thread(()-> {
+                            ServerConnection.getInstance().sendImage(img);
+                        }).start();
                     }
                 }
             }

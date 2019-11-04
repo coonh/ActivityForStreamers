@@ -101,11 +101,10 @@ public class Server {
                     try{
                         if ((input = reader.readLine())!= null) {
                             for (Map.Entry<Socket, ClientData> e: sockets.entrySet()) {
-                                //if (e.getKey().equals(socket)) continue;
-                                //else{
-                                    e.getValue().getWriter().println(input);
-                                    e.getValue().getWriter().flush();
-                                //}
+                                if (e.getKey().equals(socket)) continue;
+
+                                e.getValue().getWriter().println(input);
+                                e.getValue().getWriter().flush();
                             }
                         }
                     } catch (IOException e){

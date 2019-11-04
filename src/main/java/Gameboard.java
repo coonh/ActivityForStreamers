@@ -423,11 +423,16 @@ class Gameboard {
         for(int i=0;i<6;i++){
             Rectangle cam = new Rectangle(3*field_size-10,2*field_size-10);
             ImageView cview = new ImageView(noIMG);
+            //TODO Set correct size for the image view
+            cview.setFitWidth(3*field_size);
+            cview.setFitHeight(2*field_size);
+            cview.setPreserveRatio(false);
+
             cam.setOnContextMenuRequested(event -> {
                 ContextMenu context = new ContextMenu();
                 for(String s : ServerConnection.getInstance().getWebcamUserList()){
                     MenuItem m = new MenuItem(s);
-                    //TODO HANDLE WHAT HAPPENS WHEN U CLICK ON CAMERA
+
                     m.setOnAction(event1 -> {
                         cam.setFill(Color.rgb(0,0,0,0));
                         cview.imageProperty().bind(ServerConnection.getInstance().getImagePropertyWithName(m.getText()));
