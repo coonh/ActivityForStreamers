@@ -480,7 +480,7 @@ class Gameboard {
         /*
         * Adding Nametags to every Streamers Cam
         * */
-        String [] streamer = {"coonh","xxthemagics","candynyaa","schniekelaramel","i407250234i","koksyy"};
+        String [] streamer = {"streamer1","streamer2","streamer3","streamer4","streamer5","streamer6 "};
 
         for (Rectangle cam : cams){
             Text name_tag = new Text("twitch.tv/"+streamer[cams.indexOf(cam)]);
@@ -560,9 +560,15 @@ class Gameboard {
         //Menu 3
         Menu resetWords = new Menu("Begriffe");
         MenuItem resetTheWords = new MenuItem("Begriffe zuruecksetzen");
+        MenuItem addWords = new MenuItem("Wörter hinzufügen");
 
-        resetWords.getItems().addAll(resetTheWords);
+        resetWords.getItems().addAll(resetTheWords,addWords);
         resetTheWords.setOnAction(event -> ServerConnector.getInstance().newGame());
+
+        addWords.setOnAction(event -> {
+            WordInterface wi = new WordInterface(stage,scene);
+            stage.setScene(wi.getWordInputScene());
+        });
 
         menubar.getMenus().addAll(fullscreen,camSetting,resetWords);
 

@@ -31,6 +31,7 @@ public class Main extends Application {
         main_stage.getIcons().add(new Image(Main.class.getResourceAsStream("/img/LOGO.png")));
         Mainmenu m = new Mainmenu(primaryStage);
         m.show(primaryStage);
+
     }
 
     @Override

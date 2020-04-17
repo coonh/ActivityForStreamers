@@ -1,8 +1,6 @@
 package server;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.*;
 
@@ -11,20 +9,19 @@ public class WordReader {
     private WordStack<String> d3,d4,d5,p3,p4,p5,e3,e4,e5;
 
     private ArrayList<WordStack<String>> allStacks;
-
-
     private static WordReader instance;
+    private final String path = System.getProperty("user.dir")+File.separator+"src"+File.separator+"main"+File.separator+"resources"+File.separator+"worddata";
 
     private WordReader(){
-        e3 = new WordStack<>("/worddata/explain3.txt");
-        e4 = new WordStack<>("/worddata/explain4.txt");
-        e5 = new WordStack<>("/worddata/explain5.txt");
-        d3 = new WordStack<>("/worddata/drawing3.txt");
-        d4 = new WordStack<>("/worddata/drawing4.txt");
-        d5 = new WordStack<>("/worddata/drawing5.txt");
-        p3 = new WordStack<>("/worddata/pantom3.txt");
-        p4 = new WordStack<>("/worddata/pantom4.txt");
-        p5 = new WordStack<>("/worddata/pantom5.txt");
+        e3 = new WordStack<>(path+File.separator+"explain3.txt");
+        e4 = new WordStack<>(path+File.separator+"explain4.txt");
+        e5 = new WordStack<>(path+File.separator+"explain5.txt");
+        d3 = new WordStack<>(path+File.separator+"drawing3.txt");
+        d4 = new WordStack<>(path+File.separator+"drawing4.txt");
+        d5 = new WordStack<>(path+File.separator+"drawing5.txt");
+        p3 = new WordStack<>(path+File.separator+"pantom3.txt");
+        p4 = new WordStack<>(path+File.separator+"pantom4.txt");
+        p5 = new WordStack<>(path+File.separator+"pantom5.txt");
 
         allStacks = new ArrayList<>(Arrays.asList(d3,d4,d5,p3,p4,p5,e3,e4,e5));
 
@@ -116,6 +113,69 @@ public class WordReader {
         return word;
     }
 
+    public String addWord(String activity, int value, String word) {
+        String card = activity + value;
+        if (isItin(word)) {
+            return "Word already in Database";
+        } else {
+            switch (card) {
+                case "e3":
+                    saveWord(e3,word);
+                    break;
+                case "e4":
+                    saveWord(e4,word);
+                    break;
+                case "e5":
+                    saveWord(e5,word);
+                    break;
+                case "d3":
+                    saveWord(d3,word);
+                    break;
+                case "d4":
+                    saveWord(d4,word);
+                    break;
+                case "d5":
+                    saveWord(d5,word);
+                    break;
+                case "p3":
+                    saveWord(p3,word);
+                    break;
+                case "p4":
+                    saveWord(p4,word);
+                    break;
+                case "p5":
+                    saveWord(p5,word);
+                    break;
+                default:
+                    System.err.println("Card Value needs to be a combination of e, p, d and a value 3, 4, 5");
+                    break;
+            }
+
+            return "Word has been added!";
+        }
+    }
+
+    private void saveWord(WordStack<String> stack,String word) {
+        try {
+            File file = new File(stack.getFilePath());
+            BufferedWriter writer = new BufferedWriter(new FileWriter((file),true));
+            writer.newLine();
+            writer.write(word);
+            writer.close();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private boolean isItin(String word) {
+        for(WordStack stack : allStacks){
+            if(stack.contains(word)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public void reset() {
         WordReader.instance = new WordReader();
@@ -127,7 +187,7 @@ public class WordReader {
 
         public WordStack(String filePath) {
             super();
-            this.filePath = getClass().getResource(filePath).getPath();
+            this.filePath = filePath;
         }
 
         public String getFilePath() {

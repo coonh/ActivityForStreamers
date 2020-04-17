@@ -22,7 +22,7 @@ public class ServerMain {
 
     public static void main(String[] args){
         System.out.println("Server is starting");
-        new webcam.Server();
+        //new webcam.Server();
         new ServerMain();
 
     }

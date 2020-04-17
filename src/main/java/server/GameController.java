@@ -85,6 +85,9 @@ public class GameController {
                 case "reset":
                     WordReader.getInstance().reset();
                     break;
+                case "addword":
+                    WordReader.getInstance().addWord(input.getString("activity"),input.getInt("value"),input.getString("word"));
+                    break;
                 default:
                     System.out.println("Unknown event: " + input.get("Event"));
             }
