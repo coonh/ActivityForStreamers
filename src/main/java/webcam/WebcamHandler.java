@@ -6,6 +6,8 @@ import javafx.scene.canvas.GraphicsContext;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class WebcamHandler {
 
@@ -14,6 +16,8 @@ public class WebcamHandler {
 
     private Webcam myWebcam;
     private double scalefactor;
+
+    private ExecutorService imgSender;
 
     private WebcamHandler(){
         scalefactor = 1;
@@ -27,11 +31,13 @@ public class WebcamHandler {
         myWebcam = Webcam.getWebcamByName(webcam);
         myWebcam.getDevice().setResolution(WebcamResolution.HD.getSize());
         myWebcam.open(true);
+        imgSender = Executors.newFixedThreadPool(3);
         listenToPictures();
     }
 
 
     private void listenToPictures(){
+
 
         Runnable runnable = new Runnable() {
             BufferedImage img;
@@ -43,7 +49,7 @@ public class WebcamHandler {
                         img = resizeImage(img,img.getType());
                         ServerConnection.getInstance().updateOwnImage(img);
                         //new Thread(()-> {
-                            ServerConnection.getInstance().sendImage(img);
+                        imgSender.submit(() -> ServerConnection.getInstance().sendImage(img));
                         //}).start();
                     }
                 }
