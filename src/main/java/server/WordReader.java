@@ -120,30 +120,39 @@ public class WordReader {
         } else {
             switch (card) {
                 case "e3":
+                    e3.push(word);
                     saveWord(e3,word);
                     break;
                 case "e4":
+                    e4.push(word);
                     saveWord(e4,word);
                     break;
                 case "e5":
+                    e5.push(word);
                     saveWord(e5,word);
                     break;
                 case "d3":
+                    d3.push(word);
                     saveWord(d3,word);
                     break;
                 case "d4":
+                    d4.push(word);
                     saveWord(d4,word);
                     break;
                 case "d5":
+                    d5.push(word);
                     saveWord(d5,word);
                     break;
                 case "p3":
+                    p3.push(word);
                     saveWord(p3,word);
                     break;
                 case "p4":
+                    p4.push(word);
                     saveWord(p4,word);
                     break;
                 case "p5":
+                    p5.push(word);
                     saveWord(p5,word);
                     break;
                 default:

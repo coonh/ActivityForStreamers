@@ -21,4 +21,5 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.28'
 }
 
+
 compileJava.options.encoding = 'UTF-8'

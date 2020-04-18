@@ -16,6 +16,7 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
+        System.out.println("MainMethode gestartet");
         if (args.length > 0 && args[0].toLowerCase().equals("server")){
             System.out.println("Starte Server");
             // new Server
@@ -27,11 +28,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        main_stage = primaryStage;
-        main_stage.getIcons().add(new Image(Main.class.getResourceAsStream("/img/LOGO.png")));
-        Mainmenu m = new Mainmenu(primaryStage);
-        m.show(primaryStage);
 
+        main_stage = primaryStage;
+        System.out.println("1");
+        //main_stage.getIcons().add(new Image(Main.class.getResourceAsStream("/img/LOGO.png")));
+        System.out.println("1 1");
+        Mainmenu m = new Mainmenu(primaryStage);
+        System.out.println("1 1 1");
+        m.show(primaryStage);
     }
 
     @Override
