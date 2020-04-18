@@ -42,9 +42,9 @@ public class WebcamHandler {
                     if((img = myWebcam.getImage())!= null){
                         img = resizeImage(img,img.getType());
                         ServerConnection.getInstance().updateOwnImage(img);
-                        new Thread(()-> {
+                        //new Thread(()-> {
                             ServerConnection.getInstance().sendImage(img);
-                        }).start();
+                        //}).start();
                     }
                 }
             }
