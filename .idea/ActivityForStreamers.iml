@@ -1,2 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module type="JAVA_MODULE" version="4" />
+<module version="4">
+  <component name="ExternalSystem" externalSystem="GRADLE" externalSystemModuleGroup="coonh_97" externalSystemModuleVersion="1.0-SNAPSHOT" linkedProjectId="ActivityForStreamers" linkedProjectPath="$MODULE_DIR$" rootProjectPath="$MODULE_DIR$" />
+</module>
