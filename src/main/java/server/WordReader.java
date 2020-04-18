@@ -253,7 +253,8 @@ public class WordReader {
                 //Whole stack into one String with line breaks
                 this.forEach(s -> output.append(s).append("\n"));
 
-                writer.write(output.toString().substring(0,output.length()-1));
+                output.deleteCharAt(output.length()-1);
+                writer.write(output.toString());
                 writer.flush();
                 writer.close();
             } catch (IOException e) {
