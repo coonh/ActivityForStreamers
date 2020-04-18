@@ -5,14 +5,18 @@ plugins {
 }
 
 group 'coonh_97'
-version '1.0-SNAPSHOT'
+version '0.1'
 
-mainClassName = "Main"
+mainClassName = "server.ServerMain"
 sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
     jcenter()
+}
+
+run {
+    standardInput = System.in
 }
 
 dependencies {

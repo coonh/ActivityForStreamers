@@ -2,3 +2,6 @@
 /.gradle/
 /.idea/
 /build/
+/worddata
+/.idea/compiler.xml
+/.idea/misc.xml

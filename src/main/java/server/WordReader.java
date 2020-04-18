@@ -1,31 +1,37 @@
 package server;
 
+
+import org.bytedeco.javacpp.presets.opencv_core;
+
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 
 public class WordReader {
 
-    private WordStack<String> d3,d4,d5,p3,p4,p5,e3,e4,e5;
+    private WordStack d3,d4,d5,p3,p4,p5,e3,e4,e5;
 
-    private ArrayList<WordStack<String>> allStacks;
+    private ArrayList<WordStack> allStacks;
     private static WordReader instance;
-    private final String path = System.getProperty("user.dir")+File.separator+"src"+File.separator+"main"+File.separator+"resources"+File.separator+"worddata";
 
     private WordReader(){
-        e3 = new WordStack<>(path+File.separator+"explain3.txt");
-        e4 = new WordStack<>(path+File.separator+"explain4.txt");
-        e5 = new WordStack<>(path+File.separator+"explain5.txt");
-        d3 = new WordStack<>(path+File.separator+"drawing3.txt");
-        d4 = new WordStack<>(path+File.separator+"drawing4.txt");
-        d5 = new WordStack<>(path+File.separator+"drawing5.txt");
-        p3 = new WordStack<>(path+File.separator+"pantom3.txt");
-        p4 = new WordStack<>(path+File.separator+"pantom4.txt");
-        p5 = new WordStack<>(path+File.separator+"pantom5.txt");
+
+        // Wordstack is filling himself with the correct word data
+        e3 = new WordStack("explain3.txt");
+        e4 = new WordStack("explain4.txt");
+        e5 = new WordStack("explain5.txt");
+        d3 = new WordStack("drawing3.txt");
+        d4 = new WordStack("drawing4.txt");
+        d5 = new WordStack("drawing5.txt");
+        p3 = new WordStack("pantom3.txt");
+        p4 = new WordStack("pantom4.txt");
+        p5 = new WordStack("pantom5.txt");
 
         allStacks = new ArrayList<>(Arrays.asList(d3,d4,d5,p3,p4,p5,e3,e4,e5));
 
-        allStacks.forEach(stack -> readInStack(stack,stack.getFilePath()));
+        //allStacks.forEach(stack -> readInStack(stack,stack.getFilePath()));
     }
 
     static WordReader getInstance(){
@@ -35,22 +41,8 @@ public class WordReader {
         return WordReader.instance;
     }
 
-    private void readInStack(Stack<String> stack, String s) {
-        BufferedReader reader;
-        try {
-            FileReader file = new FileReader(s);
-            reader = new BufferedReader(file);
-
-            String line = reader.readLine();
-            while(line != null){
-                stack.push(line);
-                line = reader.readLine();
-            }
-            Collections.shuffle(stack);
-            reader.close();
-        }catch (IOException e){
-            e.printStackTrace();
-        }
+    private void readInStack(WordStack stack, String s) {
+        stack.readInStack();
     }
 
     public String getWord(int playerpos, int value){
@@ -156,15 +148,14 @@ public class WordReader {
                     saveWord(p5,word);
                     break;
                 default:
-                    System.err.println("Card Value needs to be a combination of e, p, d and a value 3, 4, 5");
-                    break;
+                    return "Card Value needs to be a combination of e, p, d and a value 3, 4, 5";
             }
 
             return "Word has been added!";
         }
     }
 
-    private void saveWord(WordStack<String> stack,String word) {
+    private void saveWord(WordStack stack,String word) {
         try {
             File file = new File(stack.getFilePath());
             BufferedWriter writer = new BufferedWriter(new FileWriter((file),true));
@@ -191,12 +182,87 @@ public class WordReader {
     }
 
 
-    private class WordStack<T> extends Stack<T>{
+    private class WordStack extends Stack<String>{
+        String name;
         String filePath;
+        File myFile;
+        private final String path = System.getProperty("user.dir")+ File.separator + "worddata"+ File.separator;
 
-        public WordStack(String filePath) {
+        public WordStack(String fileName) {
             super();
-            this.filePath = filePath;
+            this.name = fileName;
+            filePath = path+fileName;
+
+            myFile = new File(filePath);
+            if(!myFile.exists()){
+                loadDefaultValues();
+            }
+            else {
+                readInStack();
+            }
+
+        }
+
+        public void readInStack(){
+
+            System.out.println(name + " successfully loaded. Loading the values");
+            BufferedReader reader;
+            try {
+                FileReader file = new FileReader(filePath);
+                reader = new BufferedReader(file);
+
+                String line = reader.readLine();
+                while(line != null){
+                    this.push(line);
+                    line = reader.readLine();
+                }
+                Collections.shuffle(this);
+                reader.close();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+
+        /**
+         * Is triggered, when no data in the folder worddata exists.
+         * Default values from the resource worddata will be load
+         */
+        private void loadDefaultValues(){
+
+
+            System.out.println(name + " not found. Loading default values");
+
+            try {
+                InputStreamReader file = new InputStreamReader(Class.forName("Main").getResourceAsStream("/worddata/" + name));
+                BufferedReader reader = new BufferedReader(file);
+                reader.lines().forEach(s -> this.push(s));
+            } catch (ClassNotFoundException e){
+                e.printStackTrace();
+                System.exit(1);
+            }
+
+            System.out.println("Creating: " + name + " in /worddata");
+
+
+            new File(path).mkdirs();
+
+            try {
+
+                BufferedWriter writer = new BufferedWriter(new FileWriter(myFile));
+                this.forEach(s -> {
+                    try {
+                        writer.write(s + "\n");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                writer.flush();
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Collections.shuffle(this);
+
         }
 
         public String getFilePath() {
