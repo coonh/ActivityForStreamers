@@ -34,6 +34,8 @@ public class ServerConnection {
     private String name;
 
 
+    private final AtomicReference<WritableImage> ref  = new AtomicReference<>();
+
 
     private ServerConnection(){
         isReady = false;
@@ -117,21 +119,15 @@ public class ServerConnection {
             images.put(name,new SimpleObjectProperty<>());
         }
 
-        Task<Void> receiveImage = new Task<Void>() {
-            final AtomicReference<WritableImage> ref = new AtomicReference<>();
-            @Override
-            protected Void call() throws Exception {
-                byte[] bytes = Base64.getDecoder().decode(object.getString("image"));
-                BufferedImage img = ImageIO.read(new ByteArrayInputStream(bytes));
-                ref.set(SwingFXUtils.toFXImage(img,ref.get()));
-                img.flush();
-                Platform.runLater(() -> images.get(name).set(ref.get()));
-                return null;
-            }
-        } ;
-        Thread receive = new Thread(receiveImage);
-        receive.setDaemon(true);
-        receive.start();
+        try {
+            byte[] bytes = Base64.getDecoder().decode(object.getString("image"));
+            BufferedImage img = ImageIO.read(new ByteArrayInputStream(bytes));
+            ref.set(SwingFXUtils.toFXImage(img, ref.get()));
+            img.flush();
+            Platform.runLater(() -> images.get(name).set(ref.get()));
+        } catch (IOException e){
+            System.err.println(e.getMessage());
+        }
     }
 
     public synchronized void sendImage(BufferedImage img){

@@ -31,7 +31,7 @@ public class WebcamHandler {
         myWebcam = Webcam.getWebcamByName(webcam);
         myWebcam.getDevice().setResolution(WebcamResolution.HD.getSize());
         myWebcam.open(true);
-        imgSender = Executors.newFixedThreadPool(3);
+        imgSender = Executors.newSingleThreadExecutor();
         listenToPictures();
     }
 
