@@ -1,12 +1,11 @@
 package server;
 
 
-import org.bytedeco.javacpp.presets.opencv_core;
-
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class WordReader {
@@ -248,7 +247,7 @@ public class WordReader {
 
             try {
 
-                BufferedWriter writer = new BufferedWriter(new FileWriter(myFile));
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(myFile), StandardCharsets.UTF_8));
                 this.forEach(s -> {
                     try {
                         writer.write(s + "\n");
