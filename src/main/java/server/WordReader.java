@@ -248,13 +248,12 @@ public class WordReader {
             try {
 
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(myFile), StandardCharsets.UTF_8));
-                this.forEach(s -> {
-                    try {
-                        writer.write(s + "\n");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
+                StringBuilder output = new StringBuilder();
+
+                //Whole stack into one String with line breaks
+                this.forEach(s -> output.append(s).append("\n"));
+
+                writer.write(output.toString().substring(0,output.length()-1));
                 writer.flush();
                 writer.close();
             } catch (IOException e) {
