@@ -2,7 +2,6 @@ package webcam;
 
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamResolution;
-import com.github.sarxos.webcam.ds.javacv.JavaCvDriver;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -38,8 +37,6 @@ public class MainCam extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         showImage = new ImageView();
-
-        Webcam.setDriver(new JavaCvDriver());
 
 
 

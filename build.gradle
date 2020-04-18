@@ -7,7 +7,7 @@ plugins {
 group 'coonh_97'
 version '0.1'
 
-mainClassName = "server.ServerMain"
+mainClassName = "Main"
 sourceCompatibility = 1.8
 
 repositories {
@@ -22,7 +22,6 @@ run {
 dependencies {
     compile 'org.json:json:20190722'
     compile group: 'com.github.sarxos', name: 'webcam-capture', version: '0.3.12'
-    compile group: 'com.github.sarxos', name: 'webcam-capture-driver-opencv', version: '0.3.12'
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28'
     compile group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.28'
 }

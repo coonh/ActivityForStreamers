@@ -6,6 +6,7 @@ import webcam.Server;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Scanner;
 
 
@@ -22,6 +23,9 @@ public class ServerMain {
 
     public static void main(String[] args){
         System.out.println("Server is starting");
+
+        if (Arrays.asList(args).contains("webcam")) new webcam.Server();
+
         //new webcam.Server();
         new ServerMain();
 

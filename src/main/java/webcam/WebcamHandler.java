@@ -2,7 +2,6 @@ package webcam;
 
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamResolution;
-import com.github.sarxos.webcam.ds.javacv.JavaCvDriver;
 import javafx.scene.canvas.GraphicsContext;
 
 import java.awt.*;
@@ -17,7 +16,6 @@ public class WebcamHandler {
     private double scalefactor;
 
     private WebcamHandler(){
-        //Webcam.setDriver(new JavaCvDriver());
         scalefactor = 1;
     }
 
