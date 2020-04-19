@@ -67,7 +67,7 @@ Glückspiel
 Geschäftspreise
 Kaltblüter
 Totalschaden
-KindermÃ¤dchen
+Kindermädchen
 Röntgenarzt
 Hotelkette
 Pfefferminze
@@ -101,7 +101,7 @@ Milchreis
 Haarbalsam
 Heißluftherd
 Geburtsort
-MultimillionÃ¤r
+Multimillionär
 Diskettenlaufwerk
 Schritttempo
 Anschlussflug
@@ -125,7 +125,7 @@ Zierleiste
 Gästebuch
 Binnenland
 Lichtmaschine
-SchimmelkÃ¤se
+Schimmelkäse
 Pyjamaparty
 Speisekammer
 Mittagspause

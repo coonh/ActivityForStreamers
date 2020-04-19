@@ -30,11 +30,8 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
 
         main_stage = primaryStage;
-        System.out.println("1");
-        //main_stage.getIcons().add(new Image(Main.class.getResourceAsStream("/img/LOGO.png")));
-        System.out.println("1 1");
+        main_stage.getIcons().add(new Image(Main.class.getResourceAsStream("/img/LOGO.png")));
         Mainmenu m = new Mainmenu(primaryStage);
-        System.out.println("1 1 1");
         m.show(primaryStage);
     }
 

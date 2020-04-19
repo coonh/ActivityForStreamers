@@ -232,7 +232,7 @@ public class WordReader {
             System.out.println(name + " not found. Loading default values");
 
             try {
-                InputStreamReader file = new InputStreamReader(Class.forName("Main").getResourceAsStream("/worddata/" + name));
+                InputStreamReader file = new InputStreamReader(Class.forName("ServerConnector").getResourceAsStream("/worddata/" + name));
                 BufferedReader reader = new BufferedReader(file);
                 reader.lines().forEach(s -> this.push(s));
             } catch (ClassNotFoundException e){
